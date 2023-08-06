@@ -1,69 +1,36 @@
+import { PiUserCircleDuotone } from "react-icons/pi";
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-    name: "Next.js + NextUI",
-    description: "Make beautiful websites regardless of your design experience.",
+    name: "GPT Games",
+    description: "Play games powered by GPT",
     navItems: [
-        {
-            label: "Home",
-            href: "/",
-        },
-    {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
-    }
+
     ],
-    navMenuItems: [
-        {
-            label: "Profile",
-            href: "/profile",
-        },
-        {
-            label: "Dashboard",
-            href: "/dashboard",
-        },
-        {
-            label: "Projects",
-            href: "/projects",
-        },
-        {
-            label: "Team",
-            href: "/team",
-        },
-        {
-            label: "Calendar",
-            href: "/calendar",
-        },
-        {
-            label: "Settings",
-            href: "/settings",
-        },
-        {
-            label: "Help & Feedback",
-            href: "/help-feedback",
-        },
-        {
-            label: "Logout",
-            href: "/logout",
-        },
-    ],
+    navMenuItems: {
+        loggedIn: [
+            {
+                label: 'Profile',
+                icon: PiUserCircleDuotone,
+                color: undefined,
+                href: '/profile'
+            },
+            {
+                label: 'Logout',
+                icon: undefined,
+                color: 'danger',
+            },
+        ],
+        loggedOut: [
+            {
+                label: 'Login',
+                icon: undefined,
+                color: undefined,
+            },
+        ],
+    },
     links: {
-        github: "https://github.com/nextui-org/nextui",
-        twitter: "https://twitter.com/getnextui",
-        docs: "https://nextui.org",
-        discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev"
+
     },
 };
