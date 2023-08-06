@@ -4,7 +4,7 @@ import useStore from '@/app/store';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
 import '@/styles/globals.css';
-import { Database } from '@/types/db';
+import { Database } from '@/types/generated';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import clsx from 'clsx';
 import moment from 'moment';

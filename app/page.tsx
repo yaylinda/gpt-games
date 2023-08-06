@@ -1,13 +1,6 @@
-import NewChatModal from '@/components/chats/NewChatModal';
-import FriendsSection from '@/components/friends/FriendsSection';
-import NewFriendModal from '@/components/friends/NewFriendModal';
-import GamesSection from '@/components/games/GamesSection';
-import NewGameModal from '@/components/games/NewGameModal';
+import ClientApp from '@/app/ClientApp';
 import { subtitle, title } from '@/components/primitives';
-import Section from '@/components/section/Section';
-import { DialogType } from '@/types';
-import { Database } from '@/types/db';
-import { Spacer } from '@nextui-org/spacer';
+import { Database } from '@/types/generated';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
@@ -19,22 +12,7 @@ export default async function Home() {
     } = await supabase.auth.getSession();
 
     if (session) {
-        return (
-            <>
-                <Section color="success" titleText="Games" dialogType={DialogType.NEW_GAME}>
-                    <GamesSection />
-                </Section>
-                <Spacer y={10} />
-                <Section color="primary" titleText="Chats" dialogType={DialogType.NEW_CHAT} />
-                <Spacer y={10} />
-                <Section color="danger" titleText="Friends" dialogType={DialogType.NEW_FRIEND}>
-                    <FriendsSection />
-                </Section>
-                <NewChatModal />
-                <NewFriendModal />
-                <NewGameModal />
-            </>
-        );
+        return <ClientApp userId={session.user.id} />;
     }
 
     return (

@@ -1,6 +1,5 @@
 import { DialogType } from '@/types';
 import { Session } from '@supabase/gotrue-js';
-import { produce } from 'immer';
 import { create } from 'zustand';
 
 interface StoreStateData {
