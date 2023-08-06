@@ -1,7 +1,8 @@
 'use client';
 
-import PasswordVisibilityToggle from '@/app/PasswordVisibilityToggle';
 import useStore from '@/app/store';
+import PasswordVisibilityToggle from '@/components/auth/PasswordVisibilityToggle';
+import { DialogType } from '@/types';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';
@@ -30,7 +31,7 @@ const AuthModal = () => {
     const router = useRouter();
     const supabase = createClientComponentClient();
 
-    const { isAuthDialogOpen: isOpen, closeAuthDialog } = useStore();
+    const { activeDialog, closeDialog } = useStore();
 
     const [isLogin, setIsLogin] = React.useState(true);
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -139,7 +140,7 @@ const AuthModal = () => {
             return;
         }
 
-        closeAuthDialog();
+        closeDialog();
         // TODO - reset state variables
         // TODO - on signup, show banner/alert for user to confirm email
         // TODO - on login, show banner/alert for successful login
@@ -148,11 +149,11 @@ const AuthModal = () => {
     };
 
     return (
-        <Modal isOpen={isOpen} onOpenChange={closeAuthDialog}>
+        <Modal isOpen={activeDialog === DialogType.AUTH} onOpenChange={closeDialog}>
             <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
+                        <ModalHeader className="flex">{title}</ModalHeader>
 
                         <ModalBody>
                             <Input

@@ -1,5 +1,5 @@
-import AuthModal from '@/app/AuthModal';
-import { Navbar } from '@/app/Navbar';
+import AuthModal from '@/components/auth/AuthModal';
+import { Navbar } from '@/components/navbar/Navbar';
 import useStore from '@/app/store';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <div className="relative flex flex-col h-screen">
                         {/* @ts-expect-error next version of TS will fix this */}
                         <NavbarWrapper />
-                        <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+                        <main className="container mx-auto max-w-xl pt-16 px-6 flex-grow">
                             {children}
                         </main>
                         <footer className="w-full flex items-center justify-center py-3">

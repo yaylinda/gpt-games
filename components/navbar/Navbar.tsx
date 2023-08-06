@@ -1,6 +1,7 @@
 'use client';
 
 import useStore from '@/app/store';
+import { DialogType } from '@/types';
 import { Avatar } from '@nextui-org/avatar';
 import { Dropdown, DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
 import { Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/navbar';
@@ -8,8 +9,8 @@ import { Button, DropdownItem } from '@nextui-org/react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Session } from '@supabase/gotrue-js';
 import NextLink from 'next/link';
-import { PiUserCircleDuotone } from 'react-icons/pi';
 import { useRouter } from 'next/navigation';
+import { PiUserCircleDuotone } from 'react-icons/pi';
 
 interface NavbarProps {
     session: Session | null;
@@ -18,7 +19,7 @@ interface NavbarProps {
 export const Navbar = ({ session }: NavbarProps) => {
     const router = useRouter();
 
-    const { openAuthDialog } = useStore();
+    const { openDialog } = useStore();
 
     const supabase = createClientComponentClient();
 
@@ -30,7 +31,7 @@ export const Navbar = ({ session }: NavbarProps) => {
     console.log(`[Navbar] session=${JSON.stringify(session)}`);
 
     return (
-        <NextUINavbar maxWidth="xl" position="sticky">
+        <NextUINavbar maxWidth="lg" position="sticky">
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
                 <NavbarBrand as="li" className="gap-3 max-w-fit">
                     <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -67,7 +68,11 @@ export const Navbar = ({ session }: NavbarProps) => {
                     </Dropdown>
                 ) : (
                     <NavbarItem className="md:flex">
-                        <Button color="primary" variant="ghost" onClick={openAuthDialog}>
+                        <Button
+                            color="primary"
+                            variant="ghost"
+                            onClick={() => openDialog(DialogType.AUTH)}
+                        >
                             Log In
                         </Button>
                     </NavbarItem>
