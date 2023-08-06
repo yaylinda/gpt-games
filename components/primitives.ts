@@ -1,4 +1,4 @@
-import {tv} from 'tailwind-variants';
+import { tv } from 'tailwind-variants';
 
 export const title = tv({
     base: 'inline font-bold',
@@ -22,16 +22,18 @@ export const title = tv({
         },
     },
     defaultVariants: {
-        size: 'md',
+        size: 'lg',
     },
-    compoundVariants: [{
-        color: ['violet', 'yellow', 'blue', 'cyan', 'green', 'pink', 'foreground',],
-        class: 'bg-clip-text text-transparent bg-gradient-to-b',
-    },],
+    compoundVariants: [
+        {
+            color: ['violet', 'yellow', 'blue', 'cyan', 'green', 'pink', 'foreground'],
+            class: 'bg-clip-text text-transparent bg-gradient-to-b',
+        },
+    ],
 });
 
 export const subtitle = tv({
-    base: 'w-full md:w-1/2 my-2 text-lg lg:text-xl text-default-400 inline max-w-full',
+    base: 'font-bold w-full md:w-1/2 my-2 text-lg lg:text-xl text-default-400 inline max-w-full',
     variants: {
         color: {
             violet: 'from-[#FF1CF7] to-[#b249f8]',
@@ -49,8 +51,10 @@ export const subtitle = tv({
     defaultVariants: {
         fullWidth: true,
     },
-    compoundVariants: [{
-        color: ['violet', 'yellow', 'blue', 'cyan', 'green', 'pink', 'foreground',],
-        class: 'bg-clip-text text-transparent bg-gradient-to-b',
-    },],
+    compoundVariants: [
+        {
+            color: ['violet', 'yellow', 'blue', 'cyan', 'green', 'pink', 'foreground'],
+            class: 'bg-clip-text text-transparent bg-gradient-to-b',
+        },
+    ],
 });

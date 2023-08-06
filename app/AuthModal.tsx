@@ -1,31 +1,12 @@
 'use client';
 
+import PasswordVisibilityToggle from '@/app/PasswordVisibilityToggle';
 import useStore from '@/app/store';
-import {Button} from '@nextui-org/button';
-import {Input} from '@nextui-org/input';
-import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@nextui-org/modal';
-import {EyeFilledIcon, EyeSlashFilledIcon} from '@nextui-org/shared-icons';
+import { Button } from '@nextui-org/button';
+import { Input } from '@nextui-org/input';
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';
 import React from 'react';
-
-interface PasswordVisibilityToggleProps {
-    isVisible: boolean;
-    toggleVisibility: () => void;
-}
-
-const PasswordVisibilityToggle = ({
-    isVisible,
-    toggleVisibility
-}: PasswordVisibilityToggleProps) => {
-    return (
-        <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-            {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none"/>
-            ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none"/>
-            )}
-        </button>
-    );
-};
+import { PiEnvelopeSimpleDuotone, PiPasswordDuotone, PiUserCircleDuotone } from 'react-icons/pi';
 
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -34,11 +15,7 @@ export const USERNAME_REGEX = /^[a-zA-Z0-9._-]{4,50}$/;
 export const MIN_PASSWORD_LENGTH = 4;
 
 const AuthModal = () => {
-
-    const {
-        isAuthDialogOpen: isOpen,
-        closeAuthDialog: onOpenChange
-    } = useStore();
+    const { isAuthDialogOpen: isOpen, closeAuthDialog: onOpenChange } = useStore();
 
     const [isLogin, setIsLogin] = React.useState(true);
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -51,8 +28,9 @@ const AuthModal = () => {
     const [genericErrorMessage, setGenericErrorMessage] = React.useState('');
 
     const title = isLogin ? 'Log In' : 'Sign Up';
-    const switchFormText = isLogin ? 'Don\'t have an account yet? Sign Up!' :
-        'Already have an account? Log In!';
+    const switchFormText = isLogin
+        ? "Don't have an account yet? Sign Up!"
+        : 'Already have an account? Log In!';
 
     const togglePasswordVisibility = () => setIsPasswordVisible((state) => !state);
 
@@ -77,8 +55,14 @@ const AuthModal = () => {
     }, [password, passwordConfirmation]);
 
     const submit = () => {
-        if (![emailValidationState, usernameValidationState, passwordValidationState,
-            passwordConfirmationValidationState].every((v) => v === 'valid')) {
+        if (
+            ![
+                emailValidationState,
+                usernameValidationState,
+                passwordValidationState,
+                passwordConfirmationValidationState,
+            ].every((v) => v === 'valid')
+        ) {
             setGenericErrorMessage('Oops! Please fix!');
             return;
         }
@@ -94,62 +78,96 @@ const AuthModal = () => {
                         <ModalBody>
                             <Input
                                 isRequired
+                                placeholder="email@email.com"
                                 label="Email"
-                                description={!isLogin && 'Your email will never be shared with third-parties.'}
+                                labelPlacement="outside"
+                                description={
+                                    !isLogin &&
+                                    'Your email will never be shared with third-parties.'
+                                }
                                 type="email"
+                                startContent={
+                                    <PiEnvelopeSimpleDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                                }
                                 value={email}
                                 onValueChange={(value) => setEmail(value || '')}
                                 validationState={emailValidationState}
-                                errorMessage={emailValidationState === 'invalid' && genericErrorMessage}
+                                errorMessage={
+                                    emailValidationState === 'invalid' && genericErrorMessage
+                                }
                             />
                             {!isLogin && (
                                 <Input
                                     isRequired
                                     label="Username"
-                                    description={!isLogin && 'A display name that other players can see. Does not need to be unique.'}
+                                    labelPlacement="outside"
+                                    placeholder="cool_user_123"
+                                    description={
+                                        !isLogin &&
+                                        'A display name that other players can see. Does not need to be unique.'
+                                    }
                                     type="text"
+                                    startContent={
+                                        <PiUserCircleDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                                    }
                                     value={username}
                                     onValueChange={(value) => setUsername(value || '')}
                                     validationState={usernameValidationState}
-                                    errorMessage={usernameValidationState === 'invalid' && genericErrorMessage}
+                                    errorMessage={
+                                        usernameValidationState === 'invalid' && genericErrorMessage
+                                    }
                                 />
                             )}
                             <Input
                                 isRequired
                                 label="Password"
+                                labelPlacement="outside"
+                                placeholder={isPasswordVisible ? 'password' : '********'}
                                 type={isPasswordVisible ? 'text' : 'password'}
-                                endContent={(
+                                startContent={
+                                    <PiPasswordDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                                }
+                                endContent={
                                     <PasswordVisibilityToggle
                                         isVisible={isPasswordVisible}
                                         toggleVisibility={togglePasswordVisibility}
                                     />
-                                )}
+                                }
                                 value={password}
                                 onValueChange={(value) => setPassword(value || '')}
                                 validationState={passwordValidationState}
-                                errorMessage={passwordValidationState === 'invalid' && genericErrorMessage}
+                                errorMessage={
+                                    passwordValidationState === 'invalid' && genericErrorMessage
+                                }
                             />
                             {!isLogin && (
                                 <Input
                                     isRequired
                                     label="Confirm Password"
+                                    labelPlacement="outside"
+                                    placeholder={isPasswordVisible ? 'password' : '********'}
                                     type={isPasswordVisible ? 'text' : 'password'}
-                                    endContent={(
+                                    startContent={
+                                        <PiPasswordDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                                    }
+                                    endContent={
                                         <PasswordVisibilityToggle
                                             isVisible={isPasswordVisible}
                                             toggleVisibility={togglePasswordVisibility}
                                         />
-                                    )}
+                                    }
                                     value={passwordConfirmation}
                                     onValueChange={(value) => setPasswordConfirmation(value || '')}
                                     validationState={passwordConfirmationValidationState}
-                                    errorMessage={passwordConfirmationValidationState === 'invalid' && genericErrorMessage}
+                                    errorMessage={
+                                        passwordConfirmationValidationState === 'invalid' &&
+                                        genericErrorMessage
+                                    }
                                 />
                             )}
                         </ModalBody>
 
                         <ModalFooter className="flex flex-col gap-4">
-
                             <Button
                                 className="text-xs font-normal text-default-400"
                                 onClick={() => setIsLogin((state) => !state)}
@@ -167,7 +185,6 @@ const AuthModal = () => {
                                     Submit
                                 </Button>
                             </div>
-
                         </ModalFooter>
                     </>
                 )}

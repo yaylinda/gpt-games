@@ -1,15 +1,14 @@
 'use client';
 
 import useStore from '@/app/store';
-import {Avatar} from '@nextui-org/avatar';
-import {Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem,} from '@nextui-org/navbar';
-import {Button} from '@nextui-org/react';
+import { Avatar } from '@nextui-org/avatar';
+import { Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/navbar';
+import { Button } from '@nextui-org/react';
 import NextLink from 'next/link';
-import {PiUserCircleDuotone} from 'react-icons/pi';
+import { PiUserCircleDuotone } from 'react-icons/pi';
 
 export const Navbar = () => {
-
-    const {isLoggedIn, openAuthDialog} = useStore();
+    const { isLoggedIn, openAuthDialog } = useStore();
 
     return (
         <NextUINavbar maxWidth="xl" position="sticky">
@@ -21,16 +20,13 @@ export const Navbar = () => {
                 </NavbarBrand>
             </NavbarContent>
 
-            <NavbarContent
-                className="sm:flex basis-1/5 sm:basis-full"
-                justify="end"
-            >
+            <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
                 <NavbarItem className="md:flex">
                     {isLoggedIn ? (
-                        <Avatar icon={<PiUserCircleDuotone/>}/>
-                        // TODO - show menu options when clicking on user avatar
+                        <Avatar icon={<PiUserCircleDuotone />} />
                     ) : (
-                        <Button color="primary" onClick={openAuthDialog}>
+                        // TODO - show menu options when clicking on user avatar
+                        <Button color="primary" variant="ghost" onClick={openAuthDialog}>
                             Log In
                         </Button>
                     )}
