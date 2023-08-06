@@ -2,8 +2,10 @@
 
 import useStore from '@/app/store';
 import PasswordVisibilityToggle from '@/components/auth/PasswordVisibilityToggle';
+import ModalWrapper from '@/components/modal/ModalWrapper';
 import { DialogType } from '@/types';
 import { Button } from '@nextui-org/button';
+import { Code } from '@nextui-org/code';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -31,11 +33,8 @@ const AuthModal = () => {
     const router = useRouter();
     const supabase = createClientComponentClient();
 
-    const { activeDialog, closeDialog } = useStore();
-
     const [isLogin, setIsLogin] = React.useState(true);
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
 
     const [email, setEmail] = React.useState('');
     const [username, setUsername] = React.useState('');
@@ -112,170 +111,133 @@ const AuthModal = () => {
         ) {
             console.log('something is invalid, cannot submit');
             setGenericErrorMessage('Oops! Please fix!');
-            return;
+            return false;
         }
 
-        setLoading(true);
-
         const { error } = isLogin ? await handleSignIn() : await handleSignUp();
-
-        setLoading(false);
 
         if (error) {
             console.log(`**** errorrrr: ${JSON.stringify(error)}`);
             switch (error.message) {
                 case INVALID_LOGIN:
-                    setAuthErrorMessage('Email and/or password are incorrect.');
+                    setAuthErrorMessage('Incorrect email and/or password.');
                     break;
                 case DUPLICATE_EMAIL:
                     setAuthErrorMessage('There is already an account linked to this email.');
                     break;
                 case DUPLICATE_USERNAME:
-                    setAuthErrorMessage('That username has already been taken');
+                    setAuthErrorMessage('That username has already been taken.');
                     break;
                 default:
                     setAuthErrorMessage('Oops! Something went wrong. Please try again.');
                     break;
             }
-            return;
+            return false;
         }
 
-        closeDialog();
         // TODO - reset state variables
         // TODO - on signup, show banner/alert for user to confirm email
         // TODO - on login, show banner/alert for successful login
 
         router.refresh();
+
+        return true;
     };
 
     return (
-        <Modal isOpen={activeDialog === DialogType.AUTH} onOpenChange={closeDialog}>
-            <ModalContent>
-                {(onClose) => (
-                    <>
-                        <ModalHeader className="flex">{title}</ModalHeader>
+        <ModalWrapper type={DialogType.AUTH} headerText={title} color="primary" onSubmit={submit}>
+            <Input
+                isRequired
+                placeholder="email@email.com"
+                label="Email"
+                labelPlacement="outside"
+                description={!isLogin && 'Your email will never be shared with third-parties.'}
+                type="email"
+                startContent={
+                    <PiEnvelopeSimpleDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                }
+                value={email}
+                onValueChange={(value) => setEmail(value || '')}
+                validationState={emailValidationState}
+                errorMessage={emailValidationState === 'invalid' && genericErrorMessage}
+            />
+            {!isLogin && (
+                <Input
+                    isRequired
+                    label="Username"
+                    labelPlacement="outside"
+                    placeholder="cool_user_123"
+                    description={!isLogin && 'A display name that other players can see.'}
+                    type="text"
+                    startContent={
+                        <PiUserCircleDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    }
+                    value={username}
+                    onValueChange={(value) => setUsername(value || '')}
+                    validationState={usernameValidationState}
+                    errorMessage={usernameValidationState === 'invalid' && genericErrorMessage}
+                />
+            )}
+            <Input
+                isRequired
+                label="Password"
+                labelPlacement="outside"
+                placeholder={isPasswordVisible ? 'password' : '********'}
+                type={isPasswordVisible ? 'text' : 'password'}
+                startContent={
+                    <PiPasswordDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                }
+                endContent={
+                    <PasswordVisibilityToggle
+                        isVisible={isPasswordVisible}
+                        toggleVisibility={togglePasswordVisibility}
+                    />
+                }
+                value={password}
+                onValueChange={(value) => setPassword(value || '')}
+                validationState={passwordValidationState}
+                errorMessage={passwordValidationState === 'invalid' && genericErrorMessage}
+            />
+            {!isLogin && (
+                <Input
+                    isRequired
+                    label="Confirm Password"
+                    labelPlacement="outside"
+                    placeholder={isPasswordVisible ? 'password' : '********'}
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    startContent={
+                        <PiPasswordDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    }
+                    endContent={
+                        <PasswordVisibilityToggle
+                            isVisible={isPasswordVisible}
+                            toggleVisibility={togglePasswordVisibility}
+                        />
+                    }
+                    value={passwordConfirmation}
+                    onValueChange={(value) => setPasswordConfirmation(value || '')}
+                    validationState={passwordConfirmationValidationState}
+                    errorMessage={
+                        passwordConfirmationValidationState === 'invalid' && genericErrorMessage
+                    }
+                />
+            )}
 
-                        <ModalBody>
-                            <Input
-                                isRequired
-                                placeholder="email@email.com"
-                                label="Email"
-                                labelPlacement="outside"
-                                description={
-                                    !isLogin &&
-                                    'Your email will never be shared with third-parties.'
-                                }
-                                type="email"
-                                startContent={
-                                    <PiEnvelopeSimpleDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                                }
-                                value={email}
-                                onValueChange={(value) => setEmail(value || '')}
-                                validationState={emailValidationState}
-                                errorMessage={
-                                    emailValidationState === 'invalid' && genericErrorMessage
-                                }
-                            />
-                            {!isLogin && (
-                                <Input
-                                    isRequired
-                                    label="Username"
-                                    labelPlacement="outside"
-                                    placeholder="cool_user_123"
-                                    description={
-                                        !isLogin && 'A display name that other players can see.'
-                                    }
-                                    type="text"
-                                    startContent={
-                                        <PiUserCircleDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                                    }
-                                    value={username}
-                                    onValueChange={(value) => setUsername(value || '')}
-                                    validationState={usernameValidationState}
-                                    errorMessage={
-                                        usernameValidationState === 'invalid' && genericErrorMessage
-                                    }
-                                />
-                            )}
-                            <Input
-                                isRequired
-                                label="Password"
-                                labelPlacement="outside"
-                                placeholder={isPasswordVisible ? 'password' : '********'}
-                                type={isPasswordVisible ? 'text' : 'password'}
-                                startContent={
-                                    <PiPasswordDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                                }
-                                endContent={
-                                    <PasswordVisibilityToggle
-                                        isVisible={isPasswordVisible}
-                                        toggleVisibility={togglePasswordVisibility}
-                                    />
-                                }
-                                value={password}
-                                onValueChange={(value) => setPassword(value || '')}
-                                validationState={passwordValidationState}
-                                errorMessage={
-                                    passwordValidationState === 'invalid' && genericErrorMessage
-                                }
-                            />
-                            {!isLogin && (
-                                <Input
-                                    isRequired
-                                    label="Confirm Password"
-                                    labelPlacement="outside"
-                                    placeholder={isPasswordVisible ? 'password' : '********'}
-                                    type={isPasswordVisible ? 'text' : 'password'}
-                                    startContent={
-                                        <PiPasswordDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                                    }
-                                    endContent={
-                                        <PasswordVisibilityToggle
-                                            isVisible={isPasswordVisible}
-                                            toggleVisibility={togglePasswordVisibility}
-                                        />
-                                    }
-                                    value={passwordConfirmation}
-                                    onValueChange={(value) => setPasswordConfirmation(value || '')}
-                                    validationState={passwordConfirmationValidationState}
-                                    errorMessage={
-                                        passwordConfirmationValidationState === 'invalid' &&
-                                        genericErrorMessage
-                                    }
-                                />
-                            )}
+            {authErrorMessage && (
+                <Code className="flex flex-row justify-center mt-4 mb-2" color="danger">
+                    {authErrorMessage}
+                </Code>
+            )}
 
-                            {authErrorMessage && (
-                                <div className="flex flex-row gap-2 mt-4">
-                                    <PiWarningDuotone className="text-2xl text-danger pointer-events-none flex-shrink-0" />
-                                    <p className="text-danger">{authErrorMessage}</p>
-                                </div>
-                            )}
-                        </ModalBody>
-
-                        <ModalFooter className="flex flex-col gap-4">
-                            <Button
-                                className="text-xs font-normal text-default-400"
-                                onClick={() => setIsLogin((state) => !state)}
-                                size="sm"
-                                variant="light"
-                            >
-                                {switchFormText}
-                            </Button>
-
-                            <div className="flex justify-between">
-                                <Button color="danger" variant="light" onClick={onClose}>
-                                    Cancel
-                                </Button>
-                                <Button color="primary" onPress={submit} isLoading={loading}>
-                                    Submit
-                                </Button>
-                            </div>
-                        </ModalFooter>
-                    </>
-                )}
-            </ModalContent>
-        </Modal>
+            <Button
+                className="text-xs font-normal text-default-400"
+                onClick={() => setIsLogin((state) => !state)}
+                size="sm"
+                variant="light"
+            >
+                {switchFormText}
+            </Button>
+        </ModalWrapper>
     );
 };
 

@@ -11,7 +11,7 @@ interface ModalWrapperProps {
     type: DialogType;
     headerText: string;
     color: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default';
-    onSubmit: () => void;
+    onSubmit: () => Promise<boolean>;
     children: React.ReactNode;
 }
 
@@ -20,11 +20,14 @@ const ModalWrapper = ({ type, headerText, color, onSubmit, children }: ModalWrap
 
     const [loading, setLoading] = React.useState(false);
 
-    const submit = () => {
+    const submit = async () => {
         setLoading(true);
-        // TODO
-        onSubmit();
+        const success = await onSubmit();
         setLoading(false);
+
+        if (success) {
+            closeDialog();
+        }
     };
 
     return (
