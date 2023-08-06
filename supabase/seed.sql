@@ -1,3 +1,6 @@
+insert into postgres.public.admin_settings (initial_chat_credits, initial_message_credits)
+values (3, 10);
+
 begin;
 
 -- remove the supabase_realtime publication

@@ -5,20 +5,36 @@ import useStore from '@/app/store';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
 import React from 'react';
-import { PiEnvelopeSimpleDuotone, PiPasswordDuotone, PiUserCircleDuotone } from 'react-icons/pi';
+import {
+    PiEnvelopeSimpleDuotone,
+    PiPasswordDuotone,
+    PiUserCircleDuotone,
+    PiWarningDuotone,
+} from 'react-icons/pi';
 
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
 export const USERNAME_REGEX = /^[a-zA-Z0-9._-]{4,50}$/;
-
 export const MIN_PASSWORD_LENGTH = 4;
 
+export const DUPLICATE_EMAIL = 'User already registered';
+
+export const DUPLICATE_USERNAME =
+    'duplicate key value violates unique constraint "unique_username_discriminator"';
+
+export const INVALID_LOGIN = 'Invalid login credentials';
+
 const AuthModal = () => {
+    const router = useRouter();
+    const supabase = createClientComponentClient();
+
     const { isAuthDialogOpen: isOpen, closeAuthDialog: onOpenChange } = useStore();
 
     const [isLogin, setIsLogin] = React.useState(true);
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const [email, setEmail] = React.useState('');
     const [username, setUsername] = React.useState('');
@@ -26,6 +42,7 @@ const AuthModal = () => {
     const [passwordConfirmation, setPasswordConfirmation] = React.useState('');
 
     const [genericErrorMessage, setGenericErrorMessage] = React.useState('');
+    const [authErrorMessage, setAuthErrorMessage] = React.useState('');
 
     const title = isLogin ? 'Log In' : 'Sign Up';
     const switchFormText = isLogin
@@ -40,9 +57,10 @@ const AuthModal = () => {
     }, [email]);
 
     const usernameValidationState = React.useMemo(() => {
+        if (isLogin) return 'valid';
         if (username === '') return undefined;
         return USERNAME_REGEX.test(username) ? 'valid' : 'invalid';
-    }, [username]);
+    }, [isLogin, username]);
 
     const passwordValidationState = React.useMemo(() => {
         if (password === '') return undefined;
@@ -50,11 +68,39 @@ const AuthModal = () => {
     }, [password]);
 
     const passwordConfirmationValidationState = React.useMemo(() => {
+        if (isLogin) return 'valid';
         if (password === '' || passwordConfirmation === '') return undefined;
         return password === passwordConfirmation ? 'valid' : 'invalid';
-    }, [password, passwordConfirmation]);
+    }, [isLogin, password, passwordConfirmation]);
 
-    const submit = () => {
+    const handleSignUp = async () => {
+        console.log('signing up...');
+        return await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                emailRedirectTo: `${location.origin}/auth/callback`,
+                data: {
+                    username,
+                    discriminator: '0000',
+                    platform: 'gpt-games',
+                },
+            },
+        });
+    };
+
+    const handleSignIn = async () => {
+        console.log('signing in...');
+        return await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+    };
+
+    const submit = async () => {
+        console.log('******** SUBMITTING!!!!');
+        setAuthErrorMessage('');
+
         if (
             ![
                 emailValidationState,
@@ -63,9 +109,37 @@ const AuthModal = () => {
                 passwordConfirmationValidationState,
             ].every((v) => v === 'valid')
         ) {
+            console.log('something is invalid, cannot submit');
             setGenericErrorMessage('Oops! Please fix!');
             return;
         }
+
+        setLoading(true);
+
+        const { error } = isLogin ? await handleSignIn() : await handleSignUp();
+
+        setLoading(false);
+
+        if (error) {
+            console.log(`**** errorrrr: ${JSON.stringify(error)}`);
+            switch (error.message) {
+                case INVALID_LOGIN:
+                    setAuthErrorMessage('Email and/or password are incorrect.');
+                    break;
+                case DUPLICATE_EMAIL:
+                    setAuthErrorMessage('There is already an account linked to this email.');
+                    break;
+                case DUPLICATE_USERNAME:
+                    setAuthErrorMessage('That username has already been taken');
+                    break;
+                default:
+                    setAuthErrorMessage('Oops! Something went wrong. Please try again.');
+                    break;
+            }
+            return;
+        }
+
+        router.refresh();
     };
 
     return (
@@ -103,8 +177,7 @@ const AuthModal = () => {
                                     labelPlacement="outside"
                                     placeholder="cool_user_123"
                                     description={
-                                        !isLogin &&
-                                        'A display name that other players can see. Does not need to be unique.'
+                                        !isLogin && 'A display name that other players can see.'
                                     }
                                     type="text"
                                     startContent={
@@ -165,6 +238,13 @@ const AuthModal = () => {
                                     }
                                 />
                             )}
+
+                            {authErrorMessage && (
+                                <div className="flex flex-row gap-2 mt-4">
+                                    <PiWarningDuotone className="text-2xl text-danger pointer-events-none flex-shrink-0" />
+                                    <p className="text-danger">{authErrorMessage}</p>
+                                </div>
+                            )}
                         </ModalBody>
 
                         <ModalFooter className="flex flex-col gap-4">
@@ -181,7 +261,7 @@ const AuthModal = () => {
                                 <Button color="danger" variant="light" onClick={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={submit}>
+                                <Button color="primary" onPress={submit} isLoading={loading}>
                                     Submit
                                 </Button>
                             </div>
