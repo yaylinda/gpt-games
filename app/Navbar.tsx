@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
 import useStore from '@/app/store';
-import {siteConfig} from '@/config/site';
 import {Avatar} from '@nextui-org/avatar';
-// import {Avatar} from '@nextui-org/avatar';
+import {Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem,} from '@nextui-org/navbar';
 import {Button} from '@nextui-org/react';
-import {Link} from '@nextui-org/link';
-import {
-    Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle,
-} from '@nextui-org/navbar';
 import NextLink from 'next/link';
 import {PiUserCircleDuotone} from 'react-icons/pi';
 
@@ -32,8 +27,8 @@ export const Navbar = () => {
             >
                 <NavbarItem className="md:flex">
                     {isLoggedIn ? (
-                        <Avatar icon={<PiUserCircleDuotone />} />
-                        // in the future, show menu options when clicking on user avatar
+                        <Avatar icon={<PiUserCircleDuotone/>}/>
+                        // TODO - show menu options when clicking on user avatar
                     ) : (
                         <Button color="primary" onClick={openAuthDialog}>
                             Log In
