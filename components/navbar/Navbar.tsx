@@ -55,13 +55,13 @@ export const Navbar = ({ session }: NavbarProps) => {
                             />
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Profile Actions" variant="flat">
-                            <DropdownItem key="profile" className="gap-2">
+                            <DropdownItem className="gap-2">
                                 <p className="font-semibold">
                                     {session.user.user_metadata.username}
                                 </p>
                                 <p className="font-normal text-default-500">{session.user.email}</p>
                             </DropdownItem>
-                            <DropdownItem key="logout" onClick={handleSignOut}>
+                            <DropdownItem onClick={handleSignOut}>
                                 <p className="font-semibold text-danger">Log Out</p>
                             </DropdownItem>
                         </DropdownMenu>

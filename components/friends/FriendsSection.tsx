@@ -5,7 +5,7 @@ import { Tab, Tabs } from '@nextui-org/tabs';
 import React from 'react';
 
 const FriendsSection = () => {
-    const [selected, setSelected] = React.useState<string>('friends');
+    const [selected, setSelected] = React.useState<React.Key>('friends');
 
     return (
         <div>
@@ -15,8 +15,6 @@ const FriendsSection = () => {
                 variant="bordered"
                 color="danger"
                 selectedKey={selected}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 onSelectionChange={setSelected}
             >
                 <Tab key="friends" title="Friends">
