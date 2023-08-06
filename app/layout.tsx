@@ -46,13 +46,6 @@ async function NavbarWrapper() {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-    const supabase = createServerComponentClient({ cookies });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-        console.log(`[app][layout] session=${JSON.stringify(session)}`);
-        useStore.getState().setSession(session);
-    });
-
     return (
         <html lang="en" suppressHydrationWarning>
             <head />

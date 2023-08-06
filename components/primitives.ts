@@ -33,7 +33,7 @@ export const title = tv({
 });
 
 export const subtitle = tv({
-    base: 'font-bold w-full md:w-1/2 my-2 text-lg lg:text-xl text-default-400 inline max-w-full',
+    base: 'inline font-bold text-default-400 text-lg lg:text-xl',
     variants: {
         color: {
             violet: 'from-[#FF1CF7] to-[#b249f8]',

@@ -1,6 +1,25 @@
 import { subtitle, title } from '@/components/primitives';
+import { Database } from '@/types/db';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
-export default function Home() {
+export default async function Home() {
+    const supabase = createServerComponentClient<Database>({ cookies });
+
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+
+    if (session) {
+        return (
+            <section className="flex flex-col items-center justify-center gap-4">
+                <div className="flex flex-col items-center justify-start gap-4">
+                    <h1 className={title({ color: 'green' })}>Games</h1>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
             <div className="flex flex-col max-w-lg text-center justify-center gap-4">
