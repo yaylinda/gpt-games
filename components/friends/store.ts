@@ -9,6 +9,7 @@ import {
     RequestFriendResponse,
 } from '@/components/friends/types';
 import useProfileStore from '@/components/users/store';
+import { Profile } from '@/components/users/types';
 import { Tables } from '@/types';
 import { Database } from '@/types/generated';
 import { errorAlert } from '@/utils';

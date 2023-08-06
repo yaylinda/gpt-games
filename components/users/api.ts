@@ -26,29 +26,34 @@ export const fetchProfiles = async (
 /**
  *
  * @param supabase
- * @param fullUsername
+ * @param userId
+ * @param usernameWithDiscriminator
  */
-export const findProfile = async (
+export const searchProfiles = async (
     supabase: SupabaseClient<Database>,
-    fullUsername: string
-): Promise<Profile | null> => {
-    const [username, discriminator] = fullUsername.split('#');
+    userId: string,
+    usernameWithDiscriminator: string
+): Promise<Profile[]> => {
+    const parts = usernameWithDiscriminator.split('#');
 
-    const { data, error } = await supabase
+    const username = parts[0];
+
+    let query = supabase
         .from(Tables.PROFILES)
         .select()
-        .eq('username', username.trim())
-        .eq('discriminator', discriminator.trim())
-        .maybeSingle();
+        .like('username', `%${username.trim()}%`)
+        .not('id', 'eq', userId);
 
-    if (!data) {
-        return null;
+    if (parts.length > 1) {
+        query = query.eq('discriminator', parts[1].trim());
     }
+
+    const { data, error } = await query;
 
     if (error) {
         console.error(`[findProfile] error: ${JSON.stringify(error)}`);
         throw error;
     }
 
-    return profileAdapter(data as ProfileRow);
+    return (data || []).map((p) => profileAdapter(p as ProfileRow));
 };

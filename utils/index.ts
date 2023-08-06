@@ -23,3 +23,10 @@ export const errorAlert = (e: any) => {
     console.error(`ERROR: ${JSON.stringify(e)}`);
     // TODO - do some sort of notification
 };
+
+/**
+ *
+ */
+export const generateDiscriminator = (): string => {
+    return Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
+};

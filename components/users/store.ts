@@ -1,5 +1,5 @@
 import { profileAdapter } from '@/components/users/adapters';
-import { fetchProfiles } from '@/components/users/api';
+import { fetchProfiles, searchProfiles } from '@/components/users/api';
 import { Profile, ProfileRow } from '@/components/users/types';
 import { Database } from '@/types/generated';
 import { reduceToMapped } from '@/utils';
@@ -18,6 +18,7 @@ interface ProfileStoreData {
 interface ProfileStoreFunctions {
     init: (userId: string, supabase: SupabaseClient<Database>) => void;
     fetchProfiles: (userIds: string[]) => Promise<Record<string, Profile>>;
+    searchProfiles: (usernameWithDiscriminator: string) => Promise<Profile[]>;
     upsertProfile: (profileRow: ProfileRow) => void;
     getProfile: (userId: string) => Profile;
     getUsernameWithDiscriminator: (userId: string) => string;
@@ -67,6 +68,22 @@ const useProfileStore = create<ProfileStoreState>()((set, get) => ({
         };
         set({ profiles });
         return reduceToMapped(userIds.filter((u) => profiles[u]).map((u) => profiles[u]));
+    },
+
+    searchProfiles: async (usernameWithDiscriminator: string): Promise<Profile[]> => {
+        const initInfo = get().initInfo;
+
+        if (!initInfo) {
+            return [];
+        }
+
+        const { supabase, userId } = initInfo;
+
+        const newProfiles = await searchProfiles(supabase, userId, usernameWithDiscriminator);
+
+        set((state) => ({ profiles: { ...state.profiles, ...reduceToMapped(newProfiles) } }));
+
+        return newProfiles;
     },
 
     upsertProfile: (profileRow: ProfileRow) => {

@@ -1,32 +1,22 @@
 'use client';
 
-import useStore from '@/app/store';
 import PasswordVisibilityToggle from '@/components/auth/PasswordVisibilityToggle';
 import ModalWrapper from '@/components/modal/ModalWrapper';
+import { UserMetadata } from '@/components/users/types';
+import { siteConfig } from '@/config/site';
 import { DialogType } from '@/types';
+import { generateDiscriminator } from '@/utils';
 import { Button } from '@nextui-org/button';
-import { Code } from '@nextui-org/code';
 import { Input } from '@nextui-org/input';
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import {
-    PiEnvelopeSimpleDuotone,
-    PiPasswordDuotone,
-    PiUserCircleDuotone,
-    PiWarningDuotone,
-} from 'react-icons/pi';
+import { PiEnvelopeSimpleDuotone, PiPasswordDuotone, PiUserCircleDuotone } from 'react-icons/pi';
 
-export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-export const USERNAME_REGEX = /^[a-zA-Z0-9._-]{4,50}$/;
 export const MIN_PASSWORD_LENGTH = 4;
-
 export const DUPLICATE_EMAIL = 'User already registered';
-
 export const DUPLICATE_USERNAME =
     'duplicate key value violates unique constraint "unique_username_discriminator"';
-
 export const INVALID_LOGIN = 'Invalid login credentials';
 
 const AuthModal = () => {
@@ -53,13 +43,13 @@ const AuthModal = () => {
 
     const emailValidationState = React.useMemo(() => {
         if (email === '') return undefined;
-        return EMAIL_REGEX.test(email) ? 'valid' : 'invalid';
+        return siteConfig.regex.email.test(email) ? 'valid' : 'invalid';
     }, [email]);
 
     const usernameValidationState = React.useMemo(() => {
         if (isLogin) return 'valid';
         if (username === '') return undefined;
-        return USERNAME_REGEX.test(username) ? 'valid' : 'invalid';
+        return siteConfig.regex.username.test(username) ? 'valid' : 'invalid';
     }, [isLogin, username]);
 
     const passwordValidationState = React.useMemo(() => {
@@ -75,16 +65,19 @@ const AuthModal = () => {
 
     const handleSignUp = async () => {
         console.log('signing up...');
+
+        const userMetadata: UserMetadata = {
+            username,
+            discriminator: generateDiscriminator(),
+            platform: 'gpt-games',
+        };
+
         return await supabase.auth.signUp({
             email,
             password,
             options: {
                 emailRedirectTo: `${location.origin}/auth/callback`,
-                data: {
-                    username,
-                    discriminator: '0000',
-                    platform: 'gpt-games',
-                },
+                data: userMetadata,
             },
         });
     };
@@ -145,7 +138,13 @@ const AuthModal = () => {
     };
 
     return (
-        <ModalWrapper type={DialogType.AUTH} headerText={title} color="primary" onSubmit={submit}>
+        <ModalWrapper
+            type={DialogType.AUTH}
+            headerText={title}
+            color="primary"
+            onSubmit={submit}
+            errorMessage={authErrorMessage}
+        >
             <Input
                 isRequired
                 placeholder="email@email.com"
@@ -221,12 +220,6 @@ const AuthModal = () => {
                         passwordConfirmationValidationState === 'invalid' && genericErrorMessage
                     }
                 />
-            )}
-
-            {authErrorMessage && (
-                <Code className="flex flex-row justify-center mt-4 mb-2" color="danger">
-                    {authErrorMessage}
-                </Code>
             )}
 
             <Button

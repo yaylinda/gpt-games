@@ -1,6 +1,7 @@
 'use client';
 
 import useStore from '@/app/store';
+import { UserMetadata } from '@/components/users/types';
 import { DialogType } from '@/types';
 import { Avatar } from '@nextui-org/avatar';
 import { Dropdown, DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
@@ -49,16 +50,22 @@ export const Navbar = ({ session }: NavbarProps) => {
                                 as="button"
                                 className="transition-transform"
                                 color="secondary"
-                                name={session.user.user_metadata.username}
+                                name={(session.user.user_metadata as UserMetadata).username}
                                 size="sm"
                                 icon={<PiUserCircleDuotone />}
                             />
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Profile Actions" variant="flat">
                             <DropdownItem className="gap-2">
-                                <p className="font-semibold">
-                                    {session.user.user_metadata.username}
-                                </p>
+                                <span className="flex flex-row">
+                                    <p className="font-semibold">
+                                        {(session.user.user_metadata as UserMetadata).username}
+                                    </p>
+                                    <p className="font-semibold text-default-500">
+                                        #
+                                        {(session.user.user_metadata as UserMetadata).discriminator}
+                                    </p>
+                                </span>
                                 <p className="font-normal text-default-500">{session.user.email}</p>
                             </DropdownItem>
                             <DropdownItem onClick={handleSignOut}>
