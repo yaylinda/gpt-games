@@ -1,15 +1,14 @@
+import { Session } from '@supabase/gotrue-js';
 import { produce } from 'immer';
 import { create } from 'zustand';
 
 interface StoreStateData {
-    isLoggedIn: boolean;
+    session: Session | null;
     isAuthDialogOpen: boolean;
 }
 
 interface StoreStateFunctions {
-    login: () => void;
-    register: () => void;
-    logout: () => void;
+    setSession: (session: Session | null) => void;
     openAuthDialog: () => void;
     closeAuthDialog: () => void;
 }
@@ -17,7 +16,7 @@ interface StoreStateFunctions {
 interface StoreState extends StoreStateData, StoreStateFunctions {}
 
 const DEFAULT_DATA: StoreStateData = {
-    isLoggedIn: false,
+    session: null,
     isAuthDialogOpen: false,
 };
 
@@ -32,18 +31,9 @@ const useStore = create<StoreState>()((set, get) => ({
         set({ isAuthDialogOpen: false });
     },
 
-    login: () => {
-        // TODO - implement
+    setSession: (session: Session | null) => {
+        set({ session });
     },
-
-    register: () => {
-        // TODO - implememnt
-    },
-
-    logout: () => {
-        // TODO - implememnt
-    },
-
 }));
 
 export default useStore;

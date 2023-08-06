@@ -30,7 +30,7 @@ const AuthModal = () => {
     const router = useRouter();
     const supabase = createClientComponentClient();
 
-    const { isAuthDialogOpen: isOpen, closeAuthDialog: onOpenChange } = useStore();
+    const { isAuthDialogOpen: isOpen, closeAuthDialog } = useStore();
 
     const [isLogin, setIsLogin] = React.useState(true);
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -139,11 +139,16 @@ const AuthModal = () => {
             return;
         }
 
+        closeAuthDialog();
+        // TODO - reset state variables
+        // TODO - on signup, show banner/alert for user to confirm email
+        // TODO - on login, show banner/alert for successful login
+
         router.refresh();
     };
 
     return (
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal isOpen={isOpen} onOpenChange={closeAuthDialog}>
             <ModalContent>
                 {(onClose) => (
                     <>
