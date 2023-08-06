@@ -5,7 +5,7 @@ import { title } from '@/components/primitives';
 import { DialogType } from '@/types';
 import { Button } from '@nextui-org/react';
 import React from 'react';
-import { PiPlusCircleBold, PiPlusCircleDuotone } from 'react-icons/pi';
+import { PiPlusCircleBold } from 'react-icons/pi';
 
 interface SectionProps {
     titleText: string;
