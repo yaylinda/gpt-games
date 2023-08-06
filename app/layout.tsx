@@ -37,7 +37,7 @@ export default function RootLayout({
                     {children}
                 </main>
                 <footer className="w-full flex items-center justify-center py-3">
-                    <p className="text-default-400">(c) 2023 YayLinda, Inc.</p>
+                    <p className="text-sm text-default-400">(c) 2023 YayLinda, Inc.</p>
                 </footer>
             </div>
             <AuthModal/>
