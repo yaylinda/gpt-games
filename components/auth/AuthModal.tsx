@@ -63,6 +63,17 @@ const AuthModal = () => {
         return password === passwordConfirmation ? 'valid' : 'invalid';
     }, [isLogin, password, passwordConfirmation]);
 
+    const afterClose = () => {
+        setIsLogin(true);
+        setAuthErrorMessage('');
+        setPassword('');
+        setIsPasswordVisible(false);
+        setUsername('');
+        setEmail('');
+        setPasswordConfirmation('');
+        setGenericErrorMessage('');
+    };
+
     const handleSignUp = async () => {
         console.log('signing up...');
 
@@ -144,6 +155,7 @@ const AuthModal = () => {
             color="primary"
             onSubmit={submit}
             errorMessage={authErrorMessage}
+            afterClose={afterClose}
         >
             <Input
                 isRequired

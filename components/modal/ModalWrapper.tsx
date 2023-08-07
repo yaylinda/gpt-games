@@ -13,8 +13,10 @@ interface ModalWrapperProps {
     headerText: string;
     color: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default';
     onSubmit?: () => Promise<boolean>;
+    submitDisabled?: boolean;
     children: React.ReactNode;
     errorMessage: string;
+    afterClose?: () => void;
 }
 
 const ModalWrapper = ({
@@ -22,29 +24,38 @@ const ModalWrapper = ({
     headerText,
     color,
     onSubmit,
+    submitDisabled = false,
     children,
     errorMessage,
+    afterClose,
 }: ModalWrapperProps) => {
     const { activeDialog, closeDialog } = useStore();
 
     const [loading, setLoading] = React.useState(false);
+
+    const close = () => {
+        closeDialog();
+        afterClose?.();
+    };
 
     const submit = async () => {
         if (!onSubmit) {
             return;
         }
 
-        setLoading(true);
-        const success = await onSubmit();
-        setLoading(false);
-
-        if (success) {
-            closeDialog();
+        try {
+            setLoading(true);
+            const success = await onSubmit();
+            if (success) {
+                close();
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <Modal isOpen={activeDialog === type} onOpenChange={closeDialog}>
+        <Modal isOpen={activeDialog === type} onOpenChange={close}>
             <ModalContent>
                 {(onClose) => (
                     <>
@@ -74,7 +85,12 @@ const ModalWrapper = ({
                                 Cancel
                             </Button>
                             {onSubmit && (
-                                <Button color={color} onPress={submit} isLoading={loading}>
+                                <Button
+                                    color={color}
+                                    onPress={submit}
+                                    isLoading={loading}
+                                    isDisabled={submitDisabled}
+                                >
                                     Submit
                                 </Button>
                             )}
