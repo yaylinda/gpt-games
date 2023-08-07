@@ -9,11 +9,15 @@ import {
     RequestFriendResponse,
 } from '@/components/friends/types';
 import useProfileStore from '@/components/users/store';
-import { Profile } from '@/components/users/types';
 import { Tables } from '@/types';
 import { Database } from '@/types/generated';
 import { errorAlert } from '@/utils';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { produce } from 'immer';
+import { uniq } from 'lodash';
+import moment from 'moment';
+import uuid from 'react-native-uuid';
+import { create } from 'zustand';
 import {
     isFriendRequestDeniedByOtherRow,
     isFriendRequestDeniedByUserRow,
@@ -21,11 +25,6 @@ import {
     isFriendRequestSentRow,
     isFriendRow,
 } from './utils';
-import { produce } from 'immer';
-import { uniq } from 'lodash';
-import moment from 'moment';
-import uuid from 'react-native-uuid';
-import { create } from 'zustand';
 
 interface FriendStoreData {
     initInfo: {
@@ -151,15 +150,17 @@ const useFriendStore = create<FriendStoreState>()((set, get) => ({
 
         set({ requesting: true });
 
-        const result = await requestFriend(supabase, {
-            correlationId: uuid.v4().toString(),
-            userId,
-            requesteeUsernameDiscriminator,
-        });
-
-        set({ requesting: false });
-
-        return result;
+        try {
+            return await requestFriend(supabase, {
+                correlationId: uuid.v4().toString(),
+                userId,
+                requesteeUsernameDiscriminator,
+            });
+        } catch (e) {
+            throw e;
+        } finally {
+            set({ requesting: false });
+        }
     },
 
     respondToFriendRequest: async (requester: string, accept: boolean) => {

@@ -16,6 +16,8 @@ export const requestFriend = async (
         body: request,
     });
 
+    console.info(`[requestFriend] data: ${JSON.stringify(data)}`);
+
     if (error) {
         console.error(`[requestFriend] error: ${JSON.stringify(error)}`);
         throw error;
