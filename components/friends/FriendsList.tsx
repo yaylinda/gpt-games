@@ -1,4 +1,4 @@
-import FriendRow from '@/components/friends/FriendRow';
+import FriendListItem from '@/components/friends/FriendListItem';
 import useFriendStore from '@/components/friends/store';
 import { Friend, FriendListType, FriendRequest } from '@/components/friends/types';
 import { Person } from '@/components/users/types';
@@ -54,16 +54,8 @@ const FriendsList = ({ listType }: FriendsListProps) => {
 
     return (
         <>
-            {items.map(({ person, date }: FriendItem, index: number) => (
-                <FriendRow
-                    key={person.id}
-                    person={person}
-                    date={date}
-                    rowType={listType}
-                    index={index}
-                    isFirst={index === 0}
-                    isLast={index === numItems - 1}
-                />
+            {items.map(({ person, date }: FriendItem) => (
+                <FriendListItem key={person.id} person={person} date={date} rowType={listType} />
             ))}
         </>
     );

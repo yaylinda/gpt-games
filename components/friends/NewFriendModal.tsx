@@ -1,6 +1,6 @@
 'use client';
 
-import FriendRow from '@/components/friends/FriendRow';
+import FriendListItem from '@/components/friends/FriendListItem';
 import useFriendStore from '@/components/friends/store';
 import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import ModalWrapper from '@/components/_common/ModalWrapper';

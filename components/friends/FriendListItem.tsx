@@ -10,15 +10,6 @@ import moment from 'moment';
 import React from 'react';
 import { PiCheckCircleBold, PiUserCircleFill, PiXCircleBold } from 'react-icons/pi';
 
-interface FriendRowProps {
-    person: Person;
-    date: moment.Moment;
-    rowType: FriendListType;
-    index: number;
-    isFirst: boolean;
-    isLast: boolean;
-}
-
 const datePrefix = {
     [FriendListType.FRIENDS]: 'Friends since ',
     [FriendListType.RECEIVED]: 'To ',
@@ -27,7 +18,13 @@ const datePrefix = {
     [FriendListType.OTHER_DENIED]: 'Rejected ',
 };
 
-function FriendRow({ person, date, rowType }: FriendRowProps) {
+interface FriendListItem {
+    person: Person;
+    date: moment.Moment;
+    rowType: FriendListType;
+}
+
+function FriendListItem({ person, date, rowType }: FriendListItem) {
     const personId = person.id;
     const color = stringToColor(personId);
 
@@ -83,4 +80,4 @@ function FriendRow({ person, date, rowType }: FriendRowProps) {
     );
 }
 
-export default FriendRow;
+export default FriendListItem;
