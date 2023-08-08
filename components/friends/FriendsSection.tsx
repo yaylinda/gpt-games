@@ -17,13 +17,15 @@ const friendSectionTitle = {
 };
 
 const FriendsSection = () => {
-    const { fetchFriends } = useFriendStore();
+    const { initInfo, fetchFriends } = useFriendStore();
 
     const [selected, setSelected] = React.useState<React.Key>('friends');
 
     React.useEffect(() => {
-        fetchFriends();
-    }, []);
+        if (initInfo) {
+            fetchFriends();
+        }
+    }, [fetchFriends, initInfo]);
 
     return (
         <div className="w-full">

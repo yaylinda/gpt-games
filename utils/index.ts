@@ -49,3 +49,28 @@ export const formatMoment = (date: moment.Moment) => {
     }
     return `${date.format('l')} ${date.format('h:mm a')}`;
 };
+
+export function stringToColor(string: string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+        let value = (hash >> (i * 8)) & 0xff;
+
+        // Adjust to ensure colors are not too dark or too light.
+        // Here, we make sure each RGB component is between 100 and 200.
+        value = Math.min(Math.max(100, value), 200);
+
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+}

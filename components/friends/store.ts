@@ -43,7 +43,7 @@ interface FriendStoreData {
 
 interface FriendStoreFunctions {
     init: (userId: string, supabase: SupabaseClient<Database>) => void;
-    fetchFriends: () => Promise<void>;
+    fetchFriends: () => void;
     sendFriendRequest: (userTag: string) => Promise<ResponseWithStatusAndMessage>;
     respondToFriendRequest: (requester: string, accepted: boolean) => void;
     upsertFriends: (friend: FriendRow) => void;
@@ -86,7 +86,12 @@ const useFriendStore = create<FriendStoreState>()((set, get) => ({
     fetchFriends: async () => {
         const initInfo = get().initInfo;
 
+        console.log(`[friendStore][fetchFriends] trying to fetch friends.....`);
+
         if (!initInfo || get().loading) {
+            console.log(
+                `[friendStore][fetchFriends] didn't fetch because no initInfo (or already loading)`
+            );
             return;
         }
 
@@ -109,6 +114,8 @@ const useFriendStore = create<FriendStoreState>()((set, get) => ({
         const uniqueUserIds: string[] = uniq(friendRows.flatMap((f) => [f.requester, f.requestee]));
 
         const profilesMap = await useProfileStore.getState().fetchProfiles(uniqueUserIds);
+
+        console.log(`[friendStore][fetchFriends] fetched ${friendRows.length} friendRows`);
 
         set({
             loading: false,
