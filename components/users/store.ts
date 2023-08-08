@@ -1,7 +1,7 @@
 import { profileAdapter } from '@/components/users/adapters';
 import { fetchProfiles, searchProfiles } from '@/components/users/api';
 import { Profile, ProfileRow } from '@/components/users/types';
-import { Database } from '@/types/generated';
+import { Database } from '@/types/db';
 import { reduceToMapped } from '@/utils';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { isEmpty } from 'lodash';

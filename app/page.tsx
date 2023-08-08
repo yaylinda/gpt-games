@@ -1,6 +1,6 @@
 import ClientApp from '@/app/ClientApp';
 import { subtitle, title } from '@/components/primitives';
-import { Database } from '@/types/generated';
+import { Database } from '@/types/db';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 

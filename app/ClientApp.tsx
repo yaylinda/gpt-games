@@ -11,7 +11,7 @@ import Section from '@/components/section/Section';
 import useProfileStore from '@/components/users/store';
 import { ProfileRow } from '@/components/users/types';
 import { DialogType, Tables } from '@/types';
-import { Database } from '@/types/generated';
+import { Database } from '@/types/db';
 import { Spacer } from '@nextui-org/spacer';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import React from 'react';

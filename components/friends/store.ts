@@ -10,7 +10,7 @@ import {
 } from '@/components/friends/types';
 import useProfileStore from '@/components/users/store';
 import { Tables } from '@/types';
-import { Database } from '@/types/generated';
+import { Database } from '@/types/db';
 import { errorAlert } from '@/utils';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { produce } from 'immer';

@@ -208,6 +208,117 @@ export interface Database {
           }
         ]
       }
+      game_actions: {
+        Row: {
+          action: string
+          created_at: string
+          game_id: string
+          id: string
+          metadata: Json
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          game_id: string
+          id?: string
+          metadata: Json
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          game_id?: string
+          id?: string
+          metadata?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_actions_game_id_fkey"
+            columns: ["game_id"]
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_actions_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      game_participants: {
+        Row: {
+          game_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          game_id: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          game_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_participants_game_id_fkey"
+            columns: ["game_id"]
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_participants_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      games: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          is_multiplayer: boolean
+          name: string
+          participants: string[]
+          status: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          is_multiplayer?: boolean
+          name: string
+          participants?: string[]
+          status: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_multiplayer?: boolean
+          name?: string
+          participants?: string[]
+          status?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "games_created_by_fkey"
+            columns: ["created_by"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

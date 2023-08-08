@@ -1,7 +1,7 @@
 import { profileAdapter } from '@/components/users/adapters';
 import { Profile, ProfileRow } from '@/components/users/types';
 import { Tables } from '@/types';
-import { Database } from '@/types/generated';
+import { Database } from '@/types/db';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 /**

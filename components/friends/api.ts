@@ -1,6 +1,6 @@
 import { RequestFriendRequest, ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { SupabaseEdgeFunctions } from '@/types';
-import { Database } from '@/types/generated';
+import { Database } from '@/types/db';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 /**

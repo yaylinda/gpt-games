@@ -12,6 +12,9 @@ export enum Tables {
     PROFILES = 'profiles',
     ADMIN_SETTINGS = 'admin_settings',
     PURCHASES = 'purchases',
+    GAMES = 'games',
+    GAME_ACTIONS = 'game_actions',
+    GAME_PARTICIPANTS = 'game_participants',
 }
 
 export enum SupabaseEdgeFunctions {
