@@ -8,14 +8,6 @@ import { Divider } from '@nextui-org/divider';
 import { Tab, Tabs } from '@nextui-org/tabs';
 import React from 'react';
 
-const friendSectionTitle = {
-    [FriendListType.FRIENDS]: 'Friends',
-    [FriendListType.RECEIVED]: 'Waiting for your response',
-    [FriendListType.SENT]: 'Waiting for their response',
-    [FriendListType.USER_DENIED]: 'You rejected',
-    [FriendListType.OTHER_DENIED]: 'They rejected',
-};
-
 const FriendsSection = () => {
     const { initInfo, fetchFriends } = useFriendStore();
 

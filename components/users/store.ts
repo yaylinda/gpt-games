@@ -1,3 +1,4 @@
+import useClientStore from '@/components/client/store';
 import { profileAdapter } from '@/components/users/adapters';
 import { fetchProfiles, searchProfiles } from '@/components/users/api';
 import { Profile, ProfileRow } from '@/components/users/types';
@@ -8,15 +9,10 @@ import { isEmpty } from 'lodash';
 import { create } from 'zustand';
 
 interface ProfileStoreData {
-    initInfo: {
-        userId: string;
-        supabase: SupabaseClient<Database>;
-    } | null;
     profiles: Record<string, Profile>;
 }
 
 interface ProfileStoreFunctions {
-    init: (userId: string, supabase: SupabaseClient<Database>) => void;
     fetchProfiles: (userIds: string[]) => Promise<Record<string, Profile>>;
     searchProfiles: (usernameWithDiscriminator: string) => Promise<Profile[]>;
     upsertProfile: (profileRow: ProfileRow) => void;
@@ -29,31 +25,18 @@ interface ProfileStoreFunctions {
 interface ProfileStoreState extends ProfileStoreData, ProfileStoreFunctions {}
 
 const DEFAULT_DATA: ProfileStoreData = {
-    initInfo: null,
     profiles: {},
 };
 
 const useProfileStore = create<ProfileStoreState>()((set, get) => ({
     ...DEFAULT_DATA,
 
-    init: (userId: string, supabase: SupabaseClient<Database>) => {
-        console.log(`[profilesStore][init] initializing store...`);
-        set({
-            initInfo: {
-                userId,
-                supabase,
-            },
-        });
-    },
-
     fetchProfiles: async (userIds: string[]): Promise<Record<string, Profile>> => {
-        const initInfo = get().initInfo;
+        const { supabase, userId } = useClientStore.getState();
 
-        if (!initInfo) {
+        if (!supabase) {
             return {};
         }
-
-        const { supabase } = initInfo;
 
         const unknownUserIds = userIds.filter((u) => !get().profiles[u]);
 
@@ -71,13 +54,11 @@ const useProfileStore = create<ProfileStoreState>()((set, get) => ({
     },
 
     searchProfiles: async (usernameWithDiscriminator: string): Promise<Profile[]> => {
-        const initInfo = get().initInfo;
+        const { supabase, userId } = useClientStore.getState();
 
-        if (!initInfo) {
+        if (!supabase) {
             return [];
         }
-
-        const { supabase, userId } = initInfo;
 
         const newProfiles = await searchProfiles(supabase, userId, usernameWithDiscriminator);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import useStore from '@/app/store';
+import useClientStore from '@/components/client/store';
 import { UserMetadata } from '@/components/users/types';
 import { DialogType } from '@/types';
 import { Avatar } from '@nextui-org/avatar';
@@ -20,7 +20,7 @@ interface NavbarProps {
 export const Navbar = ({ session }: NavbarProps) => {
     const router = useRouter();
 
-    const { openDialog } = useStore();
+    const { openDialog } = useClientStore();
 
     const supabase = createClientComponentClient();
 

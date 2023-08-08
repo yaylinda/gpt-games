@@ -1,6 +1,6 @@
 'use client';
 
-import useStore from '@/app/store';
+import useClientStore from '@/components/client/store';
 import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { title } from '@/components/primitives';
 import { DialogType } from '@/types';
@@ -32,7 +32,7 @@ const ModalWrapper = ({
     afterClose,
     autoCloseDisabled = false,
 }: ModalWrapperProps) => {
-    const { activeDialog, closeDialog } = useStore();
+    const { activeDialog, closeDialog } = useClientStore();
 
     const [loading, setLoading] = React.useState(false);
 

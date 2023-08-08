@@ -1,6 +1,6 @@
 'use client';
 
-import useStore from '@/app/store';
+import useClientStore from '@/components/client/store';
 import { title } from '@/components/primitives';
 import { DialogType } from '@/types';
 import { Button } from '@nextui-org/react';
@@ -15,7 +15,7 @@ interface SectionProps {
 }
 
 const Section = ({ titleText, color, dialogType, children }: SectionProps) => {
-    const { openDialog } = useStore();
+    const { openDialog } = useClientStore();
 
     return (
         <section className="flex flex-col items-center justify-center gap-4">

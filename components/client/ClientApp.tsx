@@ -1,6 +1,7 @@
 'use client';
 
 import NewChatModal from '@/components/chats/NewChatModal';
+import useClientStore from '@/components/client/store';
 import FriendsSection from '@/components/friends/FriendsSection';
 import NewFriendModal from '@/components/friends/NewFriendModal';
 import useFriendStore from '@/components/friends/store';
@@ -19,16 +20,16 @@ import React from 'react';
 const ClientApp = ({ userId }: { userId: string }) => {
     const supabase = createClientComponentClient<Database>();
 
-    const { upsertProfile, init: initProfileStore } = useProfileStore();
-    const { upsertFriends, init: initFriendStore } = useFriendStore();
+    const { init } = useClientStore();
+    const { upsertProfile } = useProfileStore();
+    const { upsertFriends } = useFriendStore();
 
     React.useEffect(() => {
         if (!userId) {
             return;
         }
 
-        initProfileStore(userId, supabase);
-        initFriendStore(userId, supabase);
+        init(userId, supabase);
 
         console.log(`[ClientApp][useEffect] subscribing on channel='user_${userId}'`);
 

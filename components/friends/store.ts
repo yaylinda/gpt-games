@@ -1,3 +1,4 @@
+import useClientStore from '@/components/client/store';
 import { friendAdapter, friendRequestAdapter } from '@/components/friends/adapters';
 import { requestFriend } from '@/components/friends/api';
 import {
@@ -10,9 +11,7 @@ import {
 } from '@/components/friends/types';
 import useProfileStore from '@/components/users/store';
 import { Tables } from '@/types';
-import { Database } from '@/types/db';
 import { errorAlert } from '@/utils';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { produce } from 'immer';
 import { uniq } from 'lodash';
 import moment from 'moment';
@@ -27,10 +26,6 @@ import {
 } from './utils';
 
 interface FriendStoreData {
-    initInfo: {
-        userId: string;
-        supabase: SupabaseClient<Database>;
-    } | null;
     loading: boolean;
     requesting: boolean;
     responding: boolean;
@@ -42,7 +37,6 @@ interface FriendStoreData {
 }
 
 interface FriendStoreFunctions {
-    init: (userId: string, supabase: SupabaseClient<Database>) => void;
     fetchFriends: () => void;
     sendFriendRequest: (userTag: string) => Promise<ResponseWithStatusAndMessage>;
     respondToFriendRequest: (requester: string, accepted: boolean) => void;
@@ -59,7 +53,6 @@ const FRIEND_REQUEST_LIST_TYPES = [
 ];
 
 const DEFAULT_DATA: FriendStoreData = {
-    initInfo: null,
     loading: false,
     requesting: false,
     responding: false,
@@ -73,29 +66,17 @@ const DEFAULT_DATA: FriendStoreData = {
 const useFriendStore = create<FriendStoreState>()((set, get) => ({
     ...DEFAULT_DATA,
 
-    init: (userId: string, supabase: SupabaseClient<Database>) => {
-        console.log(`[friendStore][init] initializing store...`);
-        set({
-            initInfo: {
-                userId,
-                supabase,
-            },
-        });
-    },
-
     fetchFriends: async () => {
-        const initInfo = get().initInfo;
+        const { supabase, userId } = useClientStore.getState();
 
         console.log(`[friendStore][fetchFriends] trying to fetch friends.....`);
 
-        if (!initInfo || get().loading) {
+        if (!supabase || get().loading) {
             console.log(
                 `[friendStore][fetchFriends] didn't fetch because no initInfo (or already loading)`
             );
             return;
         }
-
-        const { userId, supabase } = initInfo;
 
         set({ loading: true });
 
@@ -144,16 +125,14 @@ const useFriendStore = create<FriendStoreState>()((set, get) => ({
     sendFriendRequest: async (
         requesteeUsernameDiscriminator: string
     ): Promise<ResponseWithStatusAndMessage> => {
-        const initInfo = get().initInfo;
+        const { supabase, userId } = useClientStore.getState();
 
-        if (!initInfo) {
+        if (!supabase) {
             return {
                 success: false,
                 message: 'Oops! Something went wrong. Please try again.',
             };
         }
-
-        const { userId, supabase } = initInfo;
 
         set({ requesting: true });
 
@@ -171,13 +150,11 @@ const useFriendStore = create<FriendStoreState>()((set, get) => ({
     },
 
     respondToFriendRequest: async (requester: string, accept: boolean) => {
-        const initInfo = get().initInfo;
+        const { supabase, userId } = useClientStore.getState();
 
-        if (!initInfo) {
+        if (!supabase) {
             return;
         }
-
-        const { userId, supabase } = initInfo;
 
         set({ responding: true });
 
@@ -204,13 +181,11 @@ const useFriendStore = create<FriendStoreState>()((set, get) => ({
     upsertFriends: async (friendRow: FriendRow) => {
         console.log('[friendStore][upsertFriends] friendSubscription update');
 
-        const initInfo = get().initInfo;
+        const { userId } = useClientStore.getState();
 
-        if (!initInfo) {
+        if (!userId) {
             return;
         }
-
-        const { userId } = initInfo;
 
         let listType: FriendListType;
         let otherProfileId: string;
