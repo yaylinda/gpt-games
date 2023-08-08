@@ -32,7 +32,7 @@ export interface RequestFriendRequest extends APIRequest {
     requesteeUsernameDiscriminator: string;
 }
 
-export interface RequestFriendResponse {
+export interface ResponseWithStatusAndMessage {
     success: boolean;
     message: string;
 }

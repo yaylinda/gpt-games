@@ -154,7 +154,14 @@ const AuthModal = () => {
             headerText={title}
             color="primary"
             onSubmit={submit}
-            errorMessage={authErrorMessage}
+            response={
+                authErrorMessage
+                    ? {
+                          success: false,
+                          message: authErrorMessage,
+                      }
+                    : undefined
+            }
             afterClose={afterClose}
         >
             <Input

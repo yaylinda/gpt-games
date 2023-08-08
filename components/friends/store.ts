@@ -6,7 +6,7 @@ import {
     FriendRequest,
     FriendRow,
     FriendUpdate,
-    RequestFriendResponse,
+    ResponseWithStatusAndMessage,
 } from '@/components/friends/types';
 import useProfileStore from '@/components/users/store';
 import { Tables } from '@/types';
@@ -44,7 +44,7 @@ interface FriendStoreData {
 interface FriendStoreFunctions {
     init: (userId: string, supabase: SupabaseClient<Database>) => void;
     fetchFriends: () => Promise<void>;
-    sendFriendRequest: (userTag: string) => Promise<RequestFriendResponse>;
+    sendFriendRequest: (userTag: string) => Promise<ResponseWithStatusAndMessage>;
     respondToFriendRequest: (requester: string, accepted: boolean) => void;
     upsertFriends: (friend: FriendRow) => void;
 }
@@ -136,7 +136,7 @@ const useFriendStore = create<FriendStoreState>()((set, get) => ({
 
     sendFriendRequest: async (
         requesteeUsernameDiscriminator: string
-    ): Promise<RequestFriendResponse> => {
+    ): Promise<ResponseWithStatusAndMessage> => {
         const initInfo = get().initInfo;
 
         if (!initInfo) {

@@ -1,4 +1,4 @@
-import { RequestFriendRequest, RequestFriendResponse } from '@/components/friends/types';
+import { RequestFriendRequest, ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { SupabaseEdgeFunctions } from '@/types';
 import { Database } from '@/types/generated';
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -11,7 +11,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 export const requestFriend = async (
     supabase: SupabaseClient<Database>,
     request: RequestFriendRequest
-): Promise<RequestFriendResponse> => {
+): Promise<ResponseWithStatusAndMessage> => {
     const { data, error } = await supabase.functions.invoke(SupabaseEdgeFunctions.REQUEST_FRIEND, {
         body: request,
     });
@@ -23,5 +23,5 @@ export const requestFriend = async (
         throw error;
     }
 
-    return data as RequestFriendResponse;
+    return data as ResponseWithStatusAndMessage;
 };

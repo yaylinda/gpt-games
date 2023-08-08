@@ -1,6 +1,7 @@
 'use client';
 
 import useStore from '@/app/store';
+import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { title } from '@/components/primitives';
 import { DialogType } from '@/types';
 import { Button } from '@nextui-org/button';
@@ -15,8 +16,9 @@ interface ModalWrapperProps {
     onSubmit?: () => Promise<boolean>;
     submitDisabled?: boolean;
     children: React.ReactNode;
-    errorMessage: string;
+    response?: ResponseWithStatusAndMessage;
     afterClose?: () => void;
+    autoCloseDisabled?: boolean;
 }
 
 const ModalWrapper = ({
@@ -26,8 +28,9 @@ const ModalWrapper = ({
     onSubmit,
     submitDisabled = false,
     children,
-    errorMessage,
+    response,
     afterClose,
+    autoCloseDisabled = false,
 }: ModalWrapperProps) => {
     const { activeDialog, closeDialog } = useStore();
 
@@ -46,7 +49,7 @@ const ModalWrapper = ({
         try {
             setLoading(true);
             const success = await onSubmit();
-            if (success) {
+            if (success && !autoCloseDisabled) {
                 close();
             }
         } finally {
@@ -70,12 +73,12 @@ const ModalWrapper = ({
 
                         <ModalBody>
                             {children}
-                            {errorMessage && (
+                            {response && (
                                 <Code
-                                    className="flex flex-row justify-center mt-4 mb-2"
-                                    color="danger"
+                                    className="flex flex-row justify-center mt-4 mb-2 overflow-x-auto whitespace-pre-wrap break-words"
+                                    color={response.success ? 'success' : 'danger'}
                                 >
-                                    {errorMessage}
+                                    {response.message}
                                 </Code>
                             )}
                         </ModalBody>

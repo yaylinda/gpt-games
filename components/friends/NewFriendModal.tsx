@@ -2,6 +2,7 @@
 
 import FriendRequestProfile from '@/components/friends/FriendRequestProfile';
 import useFriendStore from '@/components/friends/store';
+import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import ModalWrapper from '@/components/modal/ModalWrapper';
 import useProfileStore from '@/components/users/store';
 import { Profile } from '@/components/users/types';
@@ -15,32 +16,32 @@ import { PiMagnifyingGlassDuotone } from 'react-icons/pi';
 const NewFriendModal = () => {
     const { sendFriendRequest, requesting } = useFriendStore();
 
-    const [searchInput, setSearchInput] = React.useState<string>('');
-    const [searchError, setSearchError] = React.useState<string>('');
+    const [input, setInput] = React.useState<string>('');
+    const [responseMsg, setResponseMsg] = React.useState<ResponseWithStatusAndMessage | undefined>(
+        undefined
+    );
 
     const validationState = React.useMemo(() => {
-        if (searchInput === '') return undefined;
-        return siteConfig.regex.usernameWithDiscriminator.test(searchInput) ? 'valid' : 'invalid';
-    }, [searchInput]);
+        if (input === '') return undefined;
+        return siteConfig.regex.usernameWithDiscriminator.test(input) ? 'valid' : 'invalid';
+    }, [input]);
 
     const afterClose = () => {
-        setSearchInput('');
-        setSearchError('');
+        setInput('');
+        setResponseMsg(undefined);
     };
 
     const onValueChange = (value: string | undefined) => {
-        setSearchInput(value || '');
-        setSearchError('');
+        setInput(value || '');
+        setResponseMsg(undefined);
     };
 
     const onSubmit = async () => {
-        const { success, message } = await sendFriendRequest(searchInput);
+        const response = await sendFriendRequest(input);
 
-        if (!success && message) {
-            setSearchError(message);
-        }
+        setResponseMsg(response);
 
-        return success;
+        return response.success;
     };
 
     return (
@@ -48,10 +49,11 @@ const NewFriendModal = () => {
             type={DialogType.NEW_FRIEND}
             headerText="Send Friend Request"
             color="danger"
-            errorMessage={searchError}
+            response={responseMsg}
             onSubmit={onSubmit}
             submitDisabled={requesting || validationState !== 'valid'}
             afterClose={afterClose}
+            autoCloseDisabled
         >
             <Input
                 isRequired
@@ -62,7 +64,7 @@ const NewFriendModal = () => {
                 startContent={
                     <PiMagnifyingGlassDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                 }
-                value={searchInput}
+                value={input}
                 onValueChange={onValueChange}
                 validationState={validationState}
             />
