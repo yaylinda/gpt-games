@@ -8,7 +8,7 @@ import useFriendStore from '@/components/friends/store';
 import { FriendRow } from '@/components/friends/types';
 import GamesSection from '@/components/games/GamesSection';
 import NewGameModal from '@/components/games/NewGameModal';
-import Section from '@/components/section/Section';
+import Section from '@/components/_common/Section';
 import useProfileStore from '@/components/users/store';
 import { ProfileRow } from '@/components/users/types';
 import { DialogType, Tables } from '@/types';
@@ -20,7 +20,7 @@ import React from 'react';
 const ClientApp = ({ userId }: { userId: string }) => {
     const supabase = createClientComponentClient<Database>();
 
-    const { init } = useClientStore();
+    const { init, isInit } = useClientStore();
     const { upsertProfile } = useProfileStore();
     const { upsertFriends } = useFriendStore();
 
@@ -32,6 +32,8 @@ const ClientApp = ({ userId }: { userId: string }) => {
         init(userId, supabase);
 
         console.log(`[ClientApp][useEffect] subscribing on channel='user_${userId}'`);
+
+        // TODO - think about moving the RLS to specific sections/pages
 
         const userSubscriptions = supabase
             .channel(`user_${userId}`)
@@ -101,6 +103,10 @@ const ClientApp = ({ userId }: { userId: string }) => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId]);
+
+    if (!isInit) {
+        return null;
+    }
 
     return (
         <>

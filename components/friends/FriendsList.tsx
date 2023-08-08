@@ -5,6 +5,11 @@ import { Person } from '@/components/users/types';
 import moment from 'moment/moment';
 import React from 'react';
 
+interface FriendItem {
+    person: Person;
+    date: moment.Moment;
+}
+
 interface FriendsListProps {
     listType: FriendListType;
 }
@@ -13,10 +18,7 @@ const FriendsList = ({ listType }: FriendsListProps) => {
     const { [listType]: list } = useFriendStore();
     const numItems = list.length;
 
-    const items: {
-        person: Person;
-        date: moment.Moment;
-    }[] = React.useMemo(
+    const items: FriendItem[] = React.useMemo(
         () =>
             list.map((f) => {
                 switch (listType) {
@@ -37,12 +39,12 @@ const FriendsList = ({ listType }: FriendsListProps) => {
                         };
                     case FriendListType.OTHER_DENIED:
                         return {
-                            person: (f as FriendRequest).requestee,
+                            person: (f as FriendRequest).requestee, // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             date: (f as FriendRequest).respondedOn!,
                         };
                     case FriendListType.USER_DENIED:
                         return {
-                            person: (f as FriendRequest).requester,
+                            person: (f as FriendRequest).requester, // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             date: (f as FriendRequest).respondedOn!,
                         };
                 }
@@ -52,28 +54,17 @@ const FriendsList = ({ listType }: FriendsListProps) => {
 
     return (
         <>
-            {items.map(
-                (
-                    {
-                        person,
-                        date,
-                    }: {
-                        person: Person;
-                        date: moment.Moment;
-                    },
-                    index: number
-                ) => (
-                    <FriendRow
-                        key={person.id}
-                        person={person}
-                        date={date}
-                        rowType={listType}
-                        index={index}
-                        isFirst={index === 0}
-                        isLast={index === numItems - 1}
-                    />
-                )
-            )}
+            {items.map(({ person, date }: FriendItem, index: number) => (
+                <FriendRow
+                    key={person.id}
+                    person={person}
+                    date={date}
+                    rowType={listType}
+                    index={index}
+                    isFirst={index === 0}
+                    isLast={index === numItems - 1}
+                />
+            ))}
         </>
     );
 };

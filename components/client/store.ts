@@ -5,6 +5,7 @@ import { create } from 'zustand';
 
 interface ClientStoreStateData {
     // session: Session | null;
+    isInit: boolean;
     userId: string;
     supabase: SupabaseClient<Database> | null;
     activeDialog: DialogType | null;
@@ -20,6 +21,7 @@ interface ClientStoreStateFunctions {
 interface ClientStoreState extends ClientStoreStateData, ClientStoreStateFunctions {}
 
 const DEFAULT_DATA: ClientStoreStateData = {
+    isInit: false,
     userId: '',
     supabase: null,
     activeDialog: null,
@@ -30,6 +32,7 @@ const useClientStore = create<ClientStoreState>()((set, get) => ({
 
     init: (userId: string, supabase: SupabaseClient<Database>) => {
         set({
+            isInit: true,
             userId,
             supabase,
         });

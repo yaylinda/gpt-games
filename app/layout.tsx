@@ -1,5 +1,5 @@
 import AuthModal from '@/components/auth/AuthModal';
-import { Navbar } from '@/components/navbar/Navbar';
+import { Navbar } from '@/components/_common/Navbar';
 import useClientStore from '@/components/client/store';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';

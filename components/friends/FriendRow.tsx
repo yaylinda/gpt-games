@@ -1,11 +1,10 @@
 'use client';
 
+import ListItem from '@/components/_common/ListItem';
 import useFriendStore from '@/components/friends/store';
 import { FriendListType } from '@/components/friends/types';
 import { Person } from '@/components/users/types';
 import { formatMoment, stringToColor } from '@/utils';
-import { Avatar } from '@nextui-org/avatar';
-import { Card, CardBody } from '@nextui-org/card';
 import { Button } from '@nextui-org/react';
 import moment from 'moment';
 import React from 'react';
@@ -20,14 +19,6 @@ interface FriendRowProps {
     isLast: boolean;
 }
 
-const namePrefix = {
-    [FriendListType.FRIENDS]: '',
-    [FriendListType.RECEIVED]: 'From: ',
-    [FriendListType.SENT]: 'To: ',
-    [FriendListType.USER_DENIED]: 'From: ',
-    [FriendListType.OTHER_DENIED]: 'To: ',
-};
-
 const datePrefix = {
     [FriendListType.FRIENDS]: 'Friends since ',
     [FriendListType.RECEIVED]: 'To ',
@@ -39,9 +30,6 @@ const datePrefix = {
 function FriendRow({ person, date, rowType }: FriendRowProps) {
     const personId = person.id;
     const color = stringToColor(personId);
-    const textColor = `text-[${color}]`;
-
-    console.log(`textColor=${textColor}`);
 
     const { respondToFriendRequest } = useFriendStore();
 
@@ -51,7 +39,7 @@ function FriendRow({ person, date, rowType }: FriendRowProps) {
         }
 
         return (
-            <div className="flex flex-row items-center gap-1">
+            <>
                 <Button
                     isIconOnly
                     color="danger"
@@ -68,36 +56,30 @@ function FriendRow({ person, date, rowType }: FriendRowProps) {
                 >
                     <PiCheckCircleBold className="text-3xl" />
                 </Button>
-            </div>
+            </>
         );
-    }, [personId, rowType]);
+    }, [personId, respondToFriendRequest, rowType]);
 
     return (
-        <Card isHoverable shadow="none">
-            <CardBody className="flex flex-row items-center justify-between">
-                <div className="flex flex-row items-center gap-4">
-                    <Avatar
-                        className="bg-white border-white"
-                        isBordered
-                        size="sm"
-                        icon={<PiUserCircleFill color={color} className="text-3xl bg-white" />}
-                    />
-                    <div className="flex flex-col gap-0.5">
-                        <div className="flex flex-row items-center">
-                            <p className={'text-sm font-bold'}>{person.username}</p>
-                            <p className="text-sm font-semibold text-default-500">
-                                #{person.discriminator}
-                            </p>
-                        </div>
-                        <p className="text-sm font-light text-default-500">
-                            {datePrefix[rowType]}
-                            {formatMoment(date)}
-                        </p>
-                    </div>
-                </div>
-                {action}
-            </CardBody>
-        </Card>
+        <ListItem
+            icon={PiUserCircleFill}
+            iconColor={color}
+            title={
+                <>
+                    <p className={'text-sm font-bold'}>{person.username}</p>
+                    <p className="text-sm font-semibold text-default-500">
+                        #{person.discriminator}
+                    </p>
+                </>
+            }
+            subtitle={
+                <p className="text-sm font-light text-default-500">
+                    {datePrefix[rowType]}
+                    {formatMoment(date)}
+                </p>
+            }
+            actions={action}
+        />
     );
 }
 

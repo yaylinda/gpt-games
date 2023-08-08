@@ -16,10 +16,12 @@ export interface Game {
     isMultiplayer: boolean;
 }
 
-export enum GameType {}
+export enum GameType {
+    MOVIE = 'MOVIE',
+}
 
-// TODO
-
-export enum GameStatus {}
-
-// TODO
+export enum GameStatus {
+    ACTIVE = 'ACTIVE',
+    WAITING = 'WAITING',
+    COMPLETED = 'COMPLETED',
+}

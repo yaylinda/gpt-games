@@ -1,7 +1,7 @@
 'use client';
 
 import PasswordVisibilityToggle from '@/components/auth/PasswordVisibilityToggle';
-import ModalWrapper from '@/components/modal/ModalWrapper';
+import ModalWrapper from '@/components/_common/ModalWrapper';
 import { UserMetadata } from '@/components/users/types';
 import { siteConfig } from '@/config/site';
 import { DialogType } from '@/types';

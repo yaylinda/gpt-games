@@ -1,12 +1,16 @@
 import useClientStore from '@/components/client/store';
-import { Game, GameRow } from '@/components/games/types';
+import { gameAdapter } from '@/components/games/adapters';
+import { Game, GameRow, GameStatus } from '@/components/games/types';
 import { Tables } from '@/types';
-import { errorAlert } from '@/utils';
+import { errorAlert, reduceToMapped } from '@/utils';
 import { create } from 'zustand';
 
 interface GameStoreData {
     loading: boolean;
     games: Record<string, Game>;
+    active: string[];
+    waiting: string[];
+    completed: string[];
 }
 
 interface GameStoreFunctions {
@@ -20,6 +24,9 @@ interface GameStoreState extends GameStoreData, GameStoreFunctions {}
 const DEFAULT_DATA: GameStoreData = {
     loading: false,
     games: {},
+    active: [],
+    waiting: [],
+    completed: [],
 };
 
 const useGameStore = create<GameStoreState>()((set, get) => ({
@@ -50,13 +57,16 @@ const useGameStore = create<GameStoreState>()((set, get) => ({
             errorAlert(error);
         }
 
-        const gameRows: GameRow[] = (data || []).map((f) => f as GameRow);
+        const gamesList: Game[] = (data || []).map((f) => gameAdapter(f as GameRow));
 
-        console.log(`[gameStore][fetchGames] fetched ${gameRows.length} gameRows`);
+        console.log(`[gameStore][fetchGames] fetched ${gamesList.length} games`);
 
         set({
             loading: false,
-            games: {}, // TODO
+            games: reduceToMapped(gamesList),
+            active: gamesList.filter((g) => g.status === GameStatus.ACTIVE).map((g) => g.id),
+            waiting: gamesList.filter((g) => g.status === GameStatus.WAITING).map((g) => g.id),
+            completed: gamesList.filter((g) => g.status === GameStatus.COMPLETED).map((g) => g.id),
         });
     },
 
@@ -66,14 +76,14 @@ const useGameStore = create<GameStoreState>()((set, get) => ({
 
     upsertGames: async (gameRow: GameRow) => {
         console.log('[gameStore][upsertGames] gameSubscription update');
+        set((state) => ({
+            games: {
+                ...state.games,
+                [gameRow.id]: gameAdapter(gameRow),
+            },
+        }));
 
-        const { supabase, userId } = useClientStore.getState();
-
-        if (!supabase) {
-            return;
-        }
-
-        // TODO
+        // TODO - handle when game moves to different status
     },
 }));
 
