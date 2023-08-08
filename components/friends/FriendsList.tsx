@@ -51,7 +51,7 @@ const FriendsList = ({ listType }: FriendsListProps) => {
     );
 
     return (
-        <div>
+        <>
             {items.map(
                 (
                     {
@@ -74,7 +74,7 @@ const FriendsList = ({ listType }: FriendsListProps) => {
                     />
                 )
             )}
-        </div>
+        </>
     );
 };
 

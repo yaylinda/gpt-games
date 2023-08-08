@@ -26,7 +26,7 @@ const FriendsSection = () => {
     }, []);
 
     return (
-        <div>
+        <div className="w-full">
             <Tabs
                 fullWidth
                 radius="full"
@@ -37,14 +37,14 @@ const FriendsSection = () => {
             >
                 <Tab key="friends" title="Friends">
                     <Card>
-                        <CardBody>
+                        <CardBody className="gap-4">
                             <FriendsList listType={FriendListType.FRIENDS} />
                         </CardBody>
                     </Card>
                 </Tab>
                 <Tab key="received" title="Received">
                     <Card>
-                        <CardBody>
+                        <CardBody className="gap-4">
                             <FriendsList listType={FriendListType.RECEIVED} />
                             <Divider />
                             <FriendsList listType={FriendListType.USER_DENIED} />
@@ -53,7 +53,7 @@ const FriendsSection = () => {
                 </Tab>
                 <Tab key="sent" title="Sent">
                     <Card>
-                        <CardBody>
+                        <CardBody className="gap-4">
                             <FriendsList listType={FriendListType.SENT} />
                             <Divider />
                             <FriendsList listType={FriendListType.OTHER_DENIED} />
