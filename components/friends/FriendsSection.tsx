@@ -1,11 +1,29 @@
 'use client';
 
+import FriendsList from '@/components/friends/FriendsList';
+import useFriendStore from '@/components/friends/store';
+import { FriendListType } from '@/components/friends/types';
 import { Card, CardBody } from '@nextui-org/card';
+import { Divider } from '@nextui-org/divider';
 import { Tab, Tabs } from '@nextui-org/tabs';
 import React from 'react';
 
+const friendSectionTitle = {
+    [FriendListType.FRIENDS]: 'Friends',
+    [FriendListType.RECEIVED]: 'Waiting for your response',
+    [FriendListType.SENT]: 'Waiting for their response',
+    [FriendListType.USER_DENIED]: 'You rejected',
+    [FriendListType.OTHER_DENIED]: 'They rejected',
+};
+
 const FriendsSection = () => {
+    const { fetchFriends } = useFriendStore();
+
     const [selected, setSelected] = React.useState<React.Key>('friends');
+
+    React.useEffect(() => {
+        fetchFriends();
+    }, []);
 
     return (
         <div>
@@ -20,30 +38,25 @@ const FriendsSection = () => {
                 <Tab key="friends" title="Friends">
                     <Card>
                         <CardBody>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
+                            <FriendsList listType={FriendListType.FRIENDS} />
                         </CardBody>
                     </Card>
                 </Tab>
                 <Tab key="received" title="Received">
                     <Card>
                         <CardBody>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
+                            <FriendsList listType={FriendListType.RECEIVED} />
+                            <Divider />
+                            <FriendsList listType={FriendListType.USER_DENIED} />
                         </CardBody>
                     </Card>
                 </Tab>
                 <Tab key="sent" title="Sent">
                     <Card>
                         <CardBody>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
+                            <FriendsList listType={FriendListType.SENT} />
+                            <Divider />
+                            <FriendsList listType={FriendListType.OTHER_DENIED} />
                         </CardBody>
                     </Card>
                 </Tab>
