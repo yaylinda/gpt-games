@@ -34,5 +34,6 @@ export interface RequestFriendRequest extends APIRequest {
 
 export interface ResponseWithStatusAndMessage {
     success: boolean;
-    message: string;
+    message: string | React.ReactNode;
+    id?: string;
 }

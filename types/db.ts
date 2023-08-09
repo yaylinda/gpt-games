@@ -285,6 +285,7 @@ export interface Database {
           created_by: string
           id: string
           is_multiplayer: boolean
+          metadata: Json
           name: string
           participants: string[]
           status: string
@@ -295,6 +296,7 @@ export interface Database {
           created_by: string
           id?: string
           is_multiplayer?: boolean
+          metadata: Json
           name: string
           participants?: string[]
           status: string
@@ -305,6 +307,7 @@ export interface Database {
           created_by?: string
           id?: string
           is_multiplayer?: boolean
+          metadata?: Json
           name?: string
           participants?: string[]
           status?: string

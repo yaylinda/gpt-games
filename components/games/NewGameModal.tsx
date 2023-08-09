@@ -8,6 +8,7 @@ import { siteConfig } from '@/config/site';
 import { DialogType } from '@/types';
 import useFormFields, { FieldRules, Fields } from '@/utils/useFormFields';
 import { Input } from '@nextui-org/input';
+import { Link } from '@nextui-org/link';
 import { Radio, RadioGroup } from '@nextui-org/radio';
 import { Switch } from '@nextui-org/switch';
 import React from 'react';
@@ -75,7 +76,26 @@ const NewGameModal = () => {
 
         const response = await createGame(getFields());
 
-        setResponseMsg(response);
+        if (response.success && response.id) {
+            setResponseMsg({
+                success: response.success,
+                message: (
+                    <p>
+                        {response.message}{' '}
+                        <Link
+                            className="text-sm"
+                            href={`/games/${response.id}`}
+                            underline="always"
+                            color="success"
+                        >
+                            Start playing!
+                        </Link>
+                    </p>
+                ),
+            });
+        } else {
+            setResponseMsg(response);
+        }
 
         return response.success;
     };
@@ -86,13 +106,14 @@ const NewGameModal = () => {
             headerText="Start New Game"
             color="success"
             response={responseMsg}
-            onSubmit={onSubmit}
+            onSubmit={responseMsg?.success ? undefined : () => onSubmit()}
             submitDisabled={creating}
             afterClose={afterClose}
+            autoCloseDisabled
         >
             <Input
                 isRequired
-                isDisabled={creating}
+                isDisabled={creating || responseMsg?.success}
                 isClearable
                 placeholder="Game Name"
                 type="text"
@@ -108,6 +129,9 @@ const NewGameModal = () => {
                 label="What game do you want to play?"
                 color="success"
                 onValueChange={(value) => updateField('type', value as GameType)}
+                validationState={errors['type'] ? 'invalid' : 'valid'}
+                errorMessage={errors['type']}
+                isDisabled={creating || responseMsg?.success}
             >
                 <Radio value={GameType.MOVIE} description={getGameTypeDescription(GameType.MOVIE)}>
                     {GameType.MOVIE}
@@ -124,6 +148,7 @@ const NewGameModal = () => {
                     )
                 }
                 onValueChange={(value) => updateField('isMultiplayer', value)}
+                isDisabled={creating || responseMsg?.success}
             >
                 Multiplayer?
             </Switch>

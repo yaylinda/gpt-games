@@ -1,7 +1,8 @@
 import useClientStore from '@/components/client/store';
 import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { gameAdapter } from '@/components/games/adapters';
-import { CreateGameInput, Game, GameRow, GameStatus } from '@/components/games/types';
+import { CreateGameInput, Game, GameInsert, GameRow, GameStatus } from '@/components/games/types';
+import { getGameMetadata } from '@/components/games/utils';
 import { Tables } from '@/types';
 import { errorAlert, reduceToMapped } from '@/utils';
 import { create } from 'zustand';
@@ -77,15 +78,48 @@ const useGameStore = create<GameStoreState>()((set, get) => ({
         const { supabase, userId } = useClientStore.getState();
 
         if (!supabase) {
-            return false;
+            return {
+                success: false,
+                message: 'Oops! Something went wrong.',
+            };
         }
 
         set({ creating: true });
 
         try {
-            return true;
+            const row: GameInsert = {
+                created_by: userId, // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                type: input.type!,
+                status: input.isMultiplayer ? GameStatus.WAITING : GameStatus.ACTIVE,
+                participants: [userId, ...input.participants],
+                name: input.name, // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                metadata: getGameMetadata(input.type!),
+            };
+
+            const { data, error } = await supabase
+                .from(Tables.GAMES)
+                .insert(row)
+                .select('id')
+                .single();
+
+            if (!data || error) {
+                return {
+                    success: false,
+                    message: error.message || 'Oops! Something went wrong.',
+                };
+            }
+
+            return {
+                success: true,
+                message: 'Successfully started a new game!',
+                id: data.id,
+            };
         } catch (e) {
-            return false;
+            return {
+                success: false, // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                message: e.message || 'Oops! Something went wrong.',
+            };
         } finally {
             set({ creating: false });
         }

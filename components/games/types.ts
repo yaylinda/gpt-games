@@ -24,11 +24,22 @@ export interface CreateGameInput {
 }
 
 export enum GameType {
-    MOVIE = 'MOVIE',
+    MOVIE = 'MOVIE', // TODO - other game types
 }
 
 export enum GameStatus {
     ACTIVE = 'ACTIVE',
     WAITING = 'WAITING',
     COMPLETED = 'COMPLETED',
+}
+
+export interface GameTypeMetadataMapping {
+    [GameType.MOVIE]: GameTypeMovieMetadata;
+    // TODO - other game types
+    default: object;
+}
+
+export interface GameTypeMovieMetadata {
+    movies: string[];
+    // TODO - other movie game metadata
 }

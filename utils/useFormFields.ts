@@ -61,6 +61,8 @@ const useFormFields = <T extends object>(initial: T, rules: FieldRules<T>) => {
 
         setErrors(errors);
 
+        console.log(`[validate] validation errors: ${JSON.stringify(errors)}`);
+        
         return isEmpty(errors);
     };
 
