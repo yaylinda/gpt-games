@@ -1,50 +1,67 @@
+import { isEmpty } from 'lodash';
 import React from 'react';
 
-type Field<K extends keyof T, T> = {
-    value: T[K];
-    rule?: (value: T[K]) => boolean;
+export type Fields<T> = {
+    [K in keyof T]: T[K];
 };
 
-type Fields<T> = {
-    [K in keyof T]: Field<K, T>;
-};
-
-type FieldError<T> = {
+export type FieldErrors<T> = {
     [K in keyof T]: string;
 };
 
-const useFormFields = <T extends object>(initial: Fields<T>) => {
-    const [fields, setFields] = React.useState<Fields<T>>(initial);
+export type FieldRules<T> = {
+    [K in keyof T]: FieldRule<T[K]>[];
+};
+
+export type FieldRule<V> = {
+    rule: (value: V) => boolean;
+    message: string;
+};
+
+const useFormFields = <T extends object>(initial: T, rules: FieldRules<T>) => {
+    const [fields, setFields] = React.useState<T>(initial);
+    const [errors, setErrors] = React.useState<FieldErrors<T>>({} as FieldErrors<T>);
 
     const updateField = <K extends keyof T>(key: K, value: T[K]) => {
+        if (errors[key]) {
+            setErrors((state) => ({
+                ...state,
+                [key]: '',
+            }));
+        }
+
         setFields((prev) => ({
             ...prev,
             [key]: value,
         }));
     };
 
-    const getFields = (): T => fields;
+    const getValues = (): T => fields;
 
-    const validate = (): FieldError<T> => {
-        const errors: FieldError<T> = {} as FieldError<T>;
+    const validate = (): boolean => {
+        const errors: FieldErrors<T> = {} as FieldErrors<T>;
 
-        for (const key of Object.keys(fields)) {
-            const field: Field<keyof T, T> = fields[key as keyof T];
+        for (const key of Object.keys(rules)) {
+            const fieldKey: keyof T = key as keyof T;
+            const fieldValue = fields[fieldKey];
 
-            if (!field.rule) {
+            if (!rules[fieldKey] || isEmpty(rules[fieldKey])) {
                 continue;
             }
 
-            const hasError = field.rule(field.value);
+            const errorMessages = rules[fieldKey]
+                .filter(({ rule }) => !rule(fieldValue))
+                .map(({ message }) => message)
+                .join(', ');
 
-            if (!hasError) {
-                continue;
+            if (errorMessages) {
+                errors[fieldKey] = errorMessages;
             }
-
-            errors[key as keyof T] = 'Please fix!';
         }
 
-        return errors;
+        setErrors(errors);
+
+        return isEmpty(errors);
     };
 
     const reset = () => {
@@ -54,8 +71,9 @@ const useFormFields = <T extends object>(initial: Fields<T>) => {
 
     return {
         fields,
+        errors,
         updateField,
-        getFields,
+        getFields: getValues,
         validate,
         reset,
     };

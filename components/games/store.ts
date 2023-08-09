@@ -1,4 +1,5 @@
 import useClientStore from '@/components/client/store';
+import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { gameAdapter } from '@/components/games/adapters';
 import { CreateGameInput, Game, GameRow, GameStatus } from '@/components/games/types';
 import { Tables } from '@/types';
@@ -16,7 +17,7 @@ interface GameStoreData {
 
 interface GameStoreFunctions {
     fetchGames: () => void;
-    createGame: (input: CreateGameInput) => Promise<boolean>;
+    createGame: (input: CreateGameInput) => Promise<ResponseWithStatusAndMessage>;
     upsertGames: (game: GameRow) => void;
 }
 
@@ -72,7 +73,7 @@ const useGameStore = create<GameStoreState>()((set, get) => ({
         });
     },
 
-    createGame: async (input: CreateGameInput) => {
+    createGame: async (input: CreateGameInput): Promise<ResponseWithStatusAndMessage> => {
         const { supabase, userId } = useClientStore.getState();
 
         if (!supabase) {

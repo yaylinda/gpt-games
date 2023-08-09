@@ -6,7 +6,7 @@ import useGameStore from '@/components/games/store';
 import { CreateGameInput, GameType } from '@/components/games/types';
 import { siteConfig } from '@/config/site';
 import { DialogType } from '@/types';
-import useFormFields from '@/utils/useFormFields';
+import useFormFields, { FieldRules, Fields } from '@/utils/useFormFields';
 import { Input } from '@nextui-org/input';
 import { Radio, RadioGroup } from '@nextui-org/radio';
 import { Switch } from '@nextui-org/switch';
@@ -20,6 +20,27 @@ const getInitialInput = (): CreateGameInput => ({
     participants: [],
 });
 
+const getRules = (): FieldRules<CreateGameInput> => ({
+    name: [
+        {
+            rule: (v) => !!v,
+            message: 'Required',
+        },
+        {
+            rule: (v) => siteConfig.regex.username.test(v),
+            message: `${siteConfig.regex.username}`,
+        },
+    ],
+    type: [
+        {
+            rule: (v) => !!v,
+            message: 'Required',
+        },
+    ],
+    isMultiplayer: [],
+    participants: [],
+});
+
 const getGameTypeDescription = (gameType: GameType) => {
     switch (gameType) {
         case GameType.MOVIE:
@@ -28,7 +49,10 @@ const getGameTypeDescription = (gameType: GameType) => {
 };
 
 const NewGameModal = () => {
-    const { getFields, updateField, validate } = useFormFields<CreateGameInput>(getInitialInput());
+    const { getFields, updateField, validate, errors } = useFormFields<CreateGameInput>(
+        getInitialInput(),
+        getRules()
+    );
 
     const { creating, createGame } = useGameStore();
 
@@ -40,13 +64,20 @@ const NewGameModal = () => {
         setResponseMsg(undefined);
     };
 
-    const onSubmit = async () => {
+    const onSubmit = async (): Promise<boolean> => {
         console.log(`onSubmit, fields=${JSON.stringify(getFields())}`);
+
+        const isValid = validate();
+
+        if (!isValid) {
+            return false;
+        }
+
         const response = await createGame(getFields());
 
         setResponseMsg(response);
 
-        return response;
+        return response.success;
     };
 
     return (
@@ -56,7 +87,7 @@ const NewGameModal = () => {
             color="success"
             response={responseMsg}
             onSubmit={onSubmit}
-            submitDisabled={creating || validationState !== 'valid'}
+            submitDisabled={creating}
             afterClose={afterClose}
         >
             <Input
@@ -69,6 +100,8 @@ const NewGameModal = () => {
                     <PiTextAaDuotone className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                 }
                 onValueChange={(value) => updateField('name', value || '')}
+                validationState={errors['name'] ? 'invalid' : 'valid'}
+                errorMessage={errors['name']}
             />
 
             <RadioGroup
