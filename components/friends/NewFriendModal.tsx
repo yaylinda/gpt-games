@@ -1,15 +1,11 @@
 'use client';
 
-import FriendListItem from '@/components/friends/FriendListItem';
+import ModalWrapper from '@/components/_common/ModalWrapper';
 import useFriendStore from '@/components/friends/store';
 import { ResponseWithStatusAndMessage } from '@/components/friends/types';
-import ModalWrapper from '@/components/_common/ModalWrapper';
-import useProfileStore from '@/components/users/store';
-import { Profile } from '@/components/users/types';
 import { siteConfig } from '@/config/site';
 import { DialogType } from '@/types';
 import { Input } from '@nextui-org/input';
-import { Button } from '@nextui-org/react';
 import React from 'react';
 import { PiMagnifyingGlassDuotone } from 'react-icons/pi';
 

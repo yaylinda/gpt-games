@@ -1,12 +1,13 @@
 import useClientStore from '@/components/client/store';
 import { gameAdapter } from '@/components/games/adapters';
-import { Game, GameRow, GameStatus } from '@/components/games/types';
+import { CreateGameInput, Game, GameRow, GameStatus } from '@/components/games/types';
 import { Tables } from '@/types';
 import { errorAlert, reduceToMapped } from '@/utils';
 import { create } from 'zustand';
 
 interface GameStoreData {
     loading: boolean;
+    creating: boolean;
     games: Record<string, Game>;
     active: string[];
     waiting: string[];
@@ -15,7 +16,7 @@ interface GameStoreData {
 
 interface GameStoreFunctions {
     fetchGames: () => void;
-    createGame: () => void;
+    createGame: (input: CreateGameInput) => Promise<boolean>;
     upsertGames: (game: GameRow) => void;
 }
 
@@ -23,6 +24,7 @@ interface GameStoreState extends GameStoreData, GameStoreFunctions {}
 
 const DEFAULT_DATA: GameStoreData = {
     loading: false,
+    creating: false,
     games: {},
     active: [],
     waiting: [],
@@ -70,11 +72,26 @@ const useGameStore = create<GameStoreState>()((set, get) => ({
         });
     },
 
-    createGame: () => {
-        // TODO
+    createGame: async (input: CreateGameInput) => {
+        const { supabase, userId } = useClientStore.getState();
+
+        if (!supabase) {
+            return false;
+        }
+
+        set({ creating: true });
+
+        try {
+            return true;
+        } catch (e) {
+            return false;
+        } finally {
+            set({ creating: false });
+        }
     },
 
     upsertGames: async (gameRow: GameRow) => {
+        set({ creating: false });
         console.log('[gameStore][upsertGames] gameSubscription update');
         set((state) => ({
             games: {

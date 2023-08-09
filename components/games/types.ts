@@ -16,6 +16,13 @@ export interface Game {
     isMultiplayer: boolean;
 }
 
+export interface CreateGameInput {
+    name: string;
+    type: GameType | null;
+    isMultiplayer: boolean;
+    participants: string[];
+}
+
 export enum GameType {
     MOVIE = 'MOVIE',
 }
