@@ -1,5 +1,6 @@
 'use client';
 
+import Section from '@/components/_common/Section';
 import NewChatModal from '@/components/chats/NewChatModal';
 import useClientStore from '@/components/client/store';
 import FriendsSection from '@/components/friends/FriendsSection';
@@ -8,7 +9,8 @@ import useFriendStore from '@/components/friends/store';
 import { FriendRow } from '@/components/friends/types';
 import GamesSection from '@/components/games/GamesSection';
 import NewGameModal from '@/components/games/NewGameModal';
-import Section from '@/components/_common/Section';
+import useGameStore from '@/components/games/store';
+import { GameRow } from '@/components/games/types';
 import useProfileStore from '@/components/users/store';
 import { ProfileRow } from '@/components/users/types';
 import { DialogType, Tables } from '@/types';
@@ -23,6 +25,7 @@ const ClientApp = ({ userId }: { userId: string }) => {
     const { init, isInit } = useClientStore();
     const { upsertProfile } = useProfileStore();
     const { upsertFriends } = useFriendStore();
+    const { upsertGames } = useGameStore();
 
     React.useEffect(() => {
         if (!userId) {
@@ -94,6 +97,24 @@ const ClientApp = ({ userId }: { userId: string }) => {
                     table: Tables.FRIENDS,
                 },
                 (payload) => upsertFriends(payload.new as FriendRow)
+            )
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: Tables.GAMES,
+                },
+                (payload) => upsertGames(payload.new as GameRow)
+            )
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: Tables.GAMES,
+                },
+                (payload) => upsertGames(payload.new as GameRow)
             )
             .subscribe();
 

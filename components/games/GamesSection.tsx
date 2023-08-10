@@ -1,14 +1,22 @@
 'use client';
 
+import GamesList from '@/components/games/GamesList';
+import useGameStore from '@/components/games/store';
 import { Card, CardBody } from '@nextui-org/card';
 import { Tab, Tabs } from '@nextui-org/tabs';
 import React from 'react';
 
 const GamesSection = () => {
+    const { fetchGames, active, waiting, completed } = useGameStore();
+
     const [selected, setSelected] = React.useState<React.Key>('active');
 
+    React.useEffect(() => {
+        fetchGames();
+    }, [fetchGames]);
+
     return (
-        <div>
+        <div className="w-full">
             <Tabs
                 fullWidth
                 radius="full"
@@ -18,34 +26,13 @@ const GamesSection = () => {
                 onSelectionChange={setSelected}
             >
                 <Tab key="active" title="Active">
-                    <Card>
-                        <CardBody>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                        </CardBody>
-                    </Card>
+                    <GamesList games={active} />
                 </Tab>
                 <Tab key="waiting" title="Waiting">
-                    <Card>
-                        <CardBody>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                        </CardBody>
-                    </Card>
+                    <GamesList games={waiting} />
                 </Tab>
                 <Tab key="completed" title="Completed">
-                    <Card>
-                        <CardBody>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                        </CardBody>
-                    </Card>
+                    <GamesList games={completed} />
                 </Tab>
             </Tabs>
         </div>

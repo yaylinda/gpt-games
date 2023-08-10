@@ -14,7 +14,13 @@ interface RowProps {
 
 const ListItem = ({ icon, iconColor, title, subtitle, actions, onClick }: RowProps) => {
     return (
-        <Card isHoverable isPressable={!!onClick} onPress={onClick} shadow="none">
+        <Card
+            isHoverable
+            isPressable={!!onClick}
+            onPress={onClick}
+            shadow="none"
+            className="w-full"
+        >
             <CardBody className="flex flex-row items-center justify-between">
                 <div className="flex flex-row items-center gap-4">
                     <Avatar

@@ -6,7 +6,13 @@ interface GamesListProps {
 }
 
 const GamesList = ({ games }: GamesListProps) => {
-    return games.map((gameId) => <GameListItem key={gameId} gameId={gameId} />);
+    return (
+        <>
+            {games.map((gameId) => (
+                <GameListItem key={gameId} gameId={gameId} />
+            ))}
+        </>
+    );
 };
 
-export default GamesList;
+export default React.memo(GamesList, (next, prev) => next.games.length === prev.games.length);
