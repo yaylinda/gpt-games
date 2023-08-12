@@ -71,6 +71,7 @@ const useFormFields = <T extends object>(initial: T, rules: FieldRules<T>) => {
     const reset = () => {
         console.log(`[useFormFields][reset] resetting fields to: ${JSON.stringify(initial)}`);
         setFields(initial);
+        setErrors({} as FieldErrors<T>);
     };
 
     return {

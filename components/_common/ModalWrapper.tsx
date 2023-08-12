@@ -11,7 +11,7 @@ import React from 'react';
 
 interface ModalWrapperProps {
     type: DialogType;
-    headerText: string;
+    headerText?: string;
     color: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default';
     onSubmit?: () => Promise<boolean>;
     submitDisabled?: boolean;
@@ -62,14 +62,16 @@ const ModalWrapper = ({
             <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader
-                            className={title({
-                                color,
-                                size: 'xs',
-                            })}
-                        >
-                            {headerText}
-                        </ModalHeader>
+                        {headerText && (
+                            <ModalHeader
+                                className={title({
+                                    color,
+                                    size: 'xs',
+                                })}
+                            >
+                                {headerText}
+                            </ModalHeader>
+                        )}
 
                         <ModalBody>
                             {children}
