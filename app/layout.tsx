@@ -1,19 +1,19 @@
 import NavbarWrapper from '@/app/navbar';
 import AuthModal from '@/components/auth/AuthModal';
 import { fontSans } from '@/_common/fonts';
-import { siteConfig } from '@/_common/constants';
 import '@/styles/globals.css';
 import clsx from 'clsx';
 import moment from 'moment';
 import { Metadata } from 'next';
 import { Providers } from './providers';
+import { SITE_DESCRIPTION, SITE_NAME } from '@/_common/constants';
 
 export const metadata: Metadata = {
     title: {
-        default: siteConfig.name,
-        template: `%s - ${siteConfig.name}`,
+        default: SITE_NAME,
+        template: `%s - ${SITE_NAME}`,
     },
-    description: siteConfig.description,
+    description: SITE_DESCRIPTION,
     themeColor: [
         {
             media: '(prefers-color-scheme: light)',

@@ -1,3 +1,6 @@
+export const APP_PLATFORM = 'gpt-games';
+export const SITE_NAME = 'GPT Games';
+export const SITE_DESCRIPTION = 'Play games powered by GPT';
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const USERNAME_REGEX = /^[a-zA-Z0-9._-]{4,50}$/;
 export const USERNAME_WITH_DISCRIM_REGEX = /^[a-zA-Z0-9._-]{4,50}#\d{4}$/;

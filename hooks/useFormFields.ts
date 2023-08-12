@@ -38,12 +38,14 @@ const useFormFields = <T extends object>(initial: T, rules: FieldRules<T>) => {
 
     const getValues = (): T => fields;
 
-    const validate = (): boolean => {
+    const validate = <S>(extraRules?: FieldRules<S>): boolean => {
         const errors: FieldErrors<T> = {} as FieldErrors<T>;
 
         for (const key of Object.keys(rules)) {
             const fieldKey: keyof T = key as keyof T;
             const fieldValue = fields[fieldKey];
+
+            // TODO - check if field has extra rule
 
             if (!rules[fieldKey] || isEmpty(rules[fieldKey])) {
                 continue;
@@ -62,7 +64,7 @@ const useFormFields = <T extends object>(initial: T, rules: FieldRules<T>) => {
         setErrors(errors);
 
         console.log(`[validate] validation errors: ${JSON.stringify(errors)}`);
-        
+
         return isEmpty(errors);
     };
 

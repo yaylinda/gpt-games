@@ -4,7 +4,6 @@ import ModalWrapper from '@/components/_common/ModalWrapper';
 import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import useGameStore from '@/components/games/store';
 import { CreateGameInput, GameType } from '@/components/games/types';
-import { siteConfig } from '@/_common/constants';
 import { DialogType } from '@/_common/types';
 import useFormFields, { FieldRules } from '@/hooks/useFormFields';
 import { Input } from '@nextui-org/input';
@@ -13,6 +12,7 @@ import { Radio, RadioGroup } from '@nextui-org/radio';
 import { Switch } from '@nextui-org/switch';
 import React from 'react';
 import { PiTextAaDuotone, PiUserFill, PiUsersFill } from 'react-icons/pi';
+import { USERNAME_REGEX } from '@/_common/constants';
 
 const getInitialInput = (): CreateGameInput => ({
     name: '',
@@ -28,8 +28,8 @@ const getRules = (): FieldRules<CreateGameInput> => ({
             message: 'Required',
         },
         {
-            rule: (v) => siteConfig.regex.username.test(v),
-            message: `${siteConfig.regex.username}`,
+            rule: (v) => USERNAME_REGEX.test(v),
+            message: `${USERNAME_REGEX}`,
         },
     ],
     type: [
