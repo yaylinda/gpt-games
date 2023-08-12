@@ -1,15 +1,11 @@
+import NavbarWrapper from '@/app/navbar';
 import AuthModal from '@/components/auth/AuthModal';
-import { Navbar } from '@/components/_common/Navbar';
-import useClientStore from '@/components/client/store';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
 import '@/styles/globals.css';
-import { Database } from '@/types/db';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import clsx from 'clsx';
 import moment from 'moment';
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -34,16 +30,6 @@ export const metadata: Metadata = {
         apple: '/apple-touch-icon.png',
     },
 };
-
-async function NavbarWrapper() {
-    const supabase = createServerComponentClient<Database>({ cookies });
-
-    const {
-        data: { session },
-    } = await supabase.auth.getSession();
-
-    return <Navbar session={session} />;
-}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (

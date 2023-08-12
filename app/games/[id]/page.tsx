@@ -1,33 +1,15 @@
-import GamePageComponent from '@/app/games/[id]/GamePageComponent';
-import ClientApp from '@/components/client/ClientApp';
-import { subtitle, title } from '@/components/primitives';
-import { Tables } from '@/types';
-import { Database } from '@/types/db';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import ClientGamePage from '@/components/games/gamePage/GamePage';
 
-export default async function GamePage({
-    params: { id },
-}: {
+interface GamePageRouteProps {
     params: {
         id: string;
     };
-}) {
-    const supabase = createServerComponentClient<Database>({ cookies });
+}
 
-    // const {
-    //     data: { session },
-    // } = await supabase.auth.getSession();
-
-    // if (session) {
-    //     return <ClientApp userId={session.user.id} />;
-    // }
-
-    const { data, error } = await supabase.from(Tables.GAMES).select().eq('id', id);
-
+export default async function GamePage({ params: { id } }: GamePageRouteProps) {
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-            <GamePageComponent gameId={id} />
+            <ClientGamePage gameId={id} />
         </section>
     );
 }

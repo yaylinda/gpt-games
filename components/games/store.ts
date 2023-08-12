@@ -90,7 +90,7 @@ const useGameStore = create<GameStoreState>()((set, get) => ({
             const row: GameInsert = {
                 created_by: userId, // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 type: input.type!,
-                status: input.isMultiplayer ? GameStatus.WAITING : GameStatus.ACTIVE,
+                status: GameStatus.WAITING,
                 participants: [userId, ...input.participants],
                 name: input.name, // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 metadata: getGameMetadata(input.type!),

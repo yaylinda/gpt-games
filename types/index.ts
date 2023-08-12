@@ -23,6 +23,7 @@ export enum SupabaseEdgeFunctions {
     EMBED_MESSAGE = 'embedMessage',
     GENERATE_RESPONSE_MESSAGE = 'generateResponseMessage',
     REQUEST_FRIEND = 'requestFriend',
+    CREATE_GAME = 'createGame',
 }
 
 ///////////////////////////////////////////////////////////

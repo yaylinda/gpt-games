@@ -33,6 +33,20 @@ export enum GameStatus {
     COMPLETED = 'COMPLETED',
 }
 
+export enum GameParticipantStatus {
+    INVITED = 'INVITED',
+    READY = 'READY',
+}
+
+export enum GameAction {
+    CREATED = 'CREATED',
+    READY = 'READY',
+    STARTED = 'STARTED',
+    START_TURN = 'START_TURN',
+    END_TURN = 'END_TURN',
+    END_GAME = 'END_GAME',
+}
+
 export interface GameTypeMetadataMapping {
     [GameType.MOVIE]: GameTypeMovieMetadata;
     // TODO - other game types

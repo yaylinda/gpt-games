@@ -1,4 +1,4 @@
-import { FriendRow } from '@/types/db';
+import { FriendRow } from '@/components/friends/types';
 
 export const getUniqueFriendRequestId = (uid1: string, uid2: string): string =>
     [uid1, uid2].sort().join('+');
