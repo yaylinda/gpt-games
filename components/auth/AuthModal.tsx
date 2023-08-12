@@ -3,21 +3,38 @@
 import PasswordVisibilityToggle from '@/components/auth/PasswordVisibilityToggle';
 import ModalWrapper from '@/components/_common/ModalWrapper';
 import { UserMetadata } from '@/components/users/types';
-import { siteConfig } from '@/config/site';
-import { DialogType } from '@/types';
-import { generateDiscriminator } from '@/utils';
+import { DialogType } from '@/_common/types';
+import { generateDiscriminator } from '@/_common/utils';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { PiEnvelopeSimpleDuotone, PiPasswordDuotone, PiUserCircleDuotone } from 'react-icons/pi';
+import { CreateGameInput } from '@/components/games/types';
+import { FieldRules } from '@/hooks/useFormFields';
+import { AuthInput } from '@/components/auth/types';
+import { AUTH_ERROR_MESSAGES, GENERIC_ERROR_MESSAGE } from '@/_common/constants';
 
-export const MIN_PASSWORD_LENGTH = 4;
-export const DUPLICATE_EMAIL = 'User already registered';
-export const DUPLICATE_USERNAME =
-    'duplicate key value violates unique constraint "unique_username_discriminator"';
-export const INVALID_LOGIN = 'Invalid login credentials';
+const getInitialInput = (): AuthInput => ({
+    name: '',
+    type: null,
+    isMultiplayer: false,
+    participants: [],
+});
+
+const getRules = (): FieldRules<AuthInput> => ({
+    name: [
+        {
+            rule: (v) => !!v,
+            message: 'Required',
+        },
+        {
+            rule: (v) => siteConfig.regex.username.test(v),
+            message: `${siteConfig.regex.username}`,
+        },
+    ],
+});
 
 const AuthModal = () => {
     const router = useRouter();
@@ -122,20 +139,9 @@ const AuthModal = () => {
 
         if (error) {
             console.log(`**** errorrrr: ${JSON.stringify(error)}`);
-            switch (error.message) {
-                case INVALID_LOGIN:
-                    setAuthErrorMessage('Incorrect email and/or password.');
-                    break;
-                case DUPLICATE_EMAIL:
-                    setAuthErrorMessage('There is already an account linked to this email.');
-                    break;
-                case DUPLICATE_USERNAME:
-                    setAuthErrorMessage('That username has already been taken.');
-                    break;
-                default:
-                    setAuthErrorMessage('Oops! Something went wrong. Please try again.');
-                    break;
-            }
+
+            setAuthErrorMessage(AUTH_ERROR_MESSAGES[error.message] || GENERIC_ERROR_MESSAGE);
+
             return false;
         }
 

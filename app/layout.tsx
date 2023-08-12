@@ -1,7 +1,7 @@
 import NavbarWrapper from '@/app/navbar';
 import AuthModal from '@/components/auth/AuthModal';
-import { fontSans } from '@/config/fonts';
-import { siteConfig } from '@/config/site';
+import { fontSans } from '@/_common/fonts';
+import { siteConfig } from '@/_common/constants';
 import '@/styles/globals.css';
 import clsx from 'clsx';
 import moment from 'moment';

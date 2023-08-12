@@ -3,7 +3,7 @@
 import useClientStore from '@/components/client/store';
 import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { title } from '@/components/primitives';
-import { DialogType } from '@/types';
+import { DialogType } from '@/_common/types';
 import { Button } from '@nextui-org/button';
 import { Code } from '@nextui-org/code';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal';

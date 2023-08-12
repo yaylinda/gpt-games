@@ -2,7 +2,7 @@
 
 import useClientStore from '@/components/client/store';
 import { UserMetadata } from '@/components/users/types';
-import { DialogType } from '@/types';
+import { DialogType } from '@/_common/types';
 import { Avatar } from '@nextui-org/avatar';
 import { Dropdown, DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
 import { Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/navbar';

@@ -10,8 +10,8 @@ import {
     ResponseWithStatusAndMessage,
 } from '@/components/friends/types';
 import useProfileStore from '@/components/users/store';
-import { Tables } from '@/types';
-import { errorAlert } from '@/utils';
+import { Tables } from '@/_common/types';
+import { errorAlert } from '@/_common/utils';
 import { produce } from 'immer';
 import { uniq } from 'lodash';
 import moment from 'moment';

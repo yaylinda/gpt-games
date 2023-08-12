@@ -1,5 +1,5 @@
-import { DialogType } from '@/types';
-import { Database } from '@/types/db';
+import { DialogType } from '@/_common/types';
+import { Database } from '@/_common/db';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { create } from 'zustand';
 

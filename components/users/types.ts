@@ -1,4 +1,4 @@
-import { Database } from '@/types/db';
+import { Database } from '@/_common/db';
 import moment from 'moment';
 
 export type ProfileRow = Database['public']['Tables']['profiles']['Row'];

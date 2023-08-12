@@ -1,7 +1,7 @@
 'use client';
 
 import ModalWrapper from '@/components/_common/ModalWrapper';
-import { DialogType } from '@/types';
+import { DialogType } from '@/_common/types';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import React from 'react';
 

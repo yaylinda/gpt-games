@@ -3,8 +3,8 @@ import { ResponseWithStatusAndMessage } from '@/components/friends/types';
 import { gameAdapter } from '@/components/games/adapters';
 import { CreateGameInput, Game, GameInsert, GameRow, GameStatus } from '@/components/games/types';
 import { getGameMetadata } from '@/components/games/utils';
-import { Tables } from '@/types';
-import { errorAlert, reduceToMapped } from '@/utils';
+import { Tables } from '@/_common/types';
+import { errorAlert, reduceToMapped } from '@/_common/utils';
 import { create } from 'zustand';
 
 interface GameStoreData {

@@ -1,7 +1,7 @@
 import { Person, Profile } from '@/components/users/types';
-import { APIRequest } from '@/types';
+import { APIRequest } from '@/_common/types';
 import moment from 'moment';
-import { Database } from '@/types/db';
+import { Database } from '@/_common/db';
 
 export type FriendRow = Database['public']['Tables']['friends']['Row'];
 export type FriendInsert = Database['public']['Tables']['friends']['Insert'];

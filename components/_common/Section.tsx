@@ -2,7 +2,7 @@
 
 import useClientStore from '@/components/client/store';
 import { title } from '@/components/primitives';
-import { DialogType } from '@/types';
+import { DialogType } from '@/_common/types';
 import { Button } from '@nextui-org/react';
 import React from 'react';
 import { PiPlusCircleBold } from 'react-icons/pi';

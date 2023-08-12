@@ -1,6 +1,6 @@
 import ListItem from '@/components/_common/ListItem';
 import useGameStore from '@/components/games/store';
-import { stringToColor } from '@/utils';
+import { stringToColor } from '@/_common/utils';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { PiGameController } from 'react-icons/pi';

@@ -4,7 +4,7 @@ import ListItem from '@/components/_common/ListItem';
 import useFriendStore from '@/components/friends/store';
 import { FriendListType } from '@/components/friends/types';
 import { Person } from '@/components/users/types';
-import { formatMoment, stringToColor } from '@/utils';
+import { formatMoment, stringToColor } from '@/_common/utils';
 import { Button } from '@nextui-org/react';
 import moment from 'moment';
 import React from 'react';

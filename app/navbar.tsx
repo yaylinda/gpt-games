@@ -1,5 +1,5 @@
 import { Navbar } from '@/components/_common/Navbar';
-import { Database } from '@/types/db';
+import { Database } from '@/_common/db';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
