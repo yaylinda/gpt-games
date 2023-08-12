@@ -12,6 +12,7 @@ export default async function Home() {
     } = await supabase.auth.getSession();
 
     if (session) {
+        // TODO - think about if client app components can be broken down into multiple server components, with caching
         return <ClientApp userId={session.user.id} />;
     }
 

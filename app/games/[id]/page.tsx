@@ -1,3 +1,4 @@
+import GamePageComponent from '@/app/games/[id]/GamePageComponent';
 import ClientApp from '@/components/client/ClientApp';
 import { subtitle, title } from '@/components/primitives';
 import { Tables } from '@/types';
@@ -26,7 +27,7 @@ export default async function GamePage({
 
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-            {JSON.stringify(data)}
+            <GamePageComponent gameId={id} />
         </section>
     );
 }
