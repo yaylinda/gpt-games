@@ -160,9 +160,6 @@ const AuthModal = () => {
             return false;
         }
 
-        // TODO - on signup, show banner/alert for user to confirm email
-        // TODO - on login, show banner/alert for successful login
-
         router.refresh();
 
         return true;

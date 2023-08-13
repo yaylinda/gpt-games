@@ -1,9 +1,19 @@
-import { Database } from '@/_common/db';
+import { Database, Json } from '@/_common/db';
 import moment from 'moment';
 
 export type GameRow = Database['public']['Tables']['games']['Row'];
 export type GameInsert = Database['public']['Tables']['games']['Insert'];
 export type GameUpdate = Database['public']['Tables']['games']['Update'];
+
+export type GameActionRow = Database['public']['Tables']['game_actions']['Row'];
+
+export type GameParticipantRow = Database['public']['Tables']['game_participants']['Row'];
+
+export interface GamePageData {
+    game: Game;
+    actions: GameAction[];
+    participants: GameParticipant[];
+}
 
 export interface Game {
     id: string;
@@ -14,6 +24,22 @@ export interface Game {
     participants: string[];
     name: string;
     isMultiplayer: boolean;
+    metadata: Json;
+}
+
+export interface GameAction {
+    id: string;
+    gameId: string;
+    userId: string;
+    action: GameActionType;
+    metadata: Json;
+    createdAt: moment.Moment;
+}
+
+export interface GameParticipant {
+    gameId: string;
+    userId: string;
+    status: GameParticipantStatus;
 }
 
 export interface CreateGameInput {
@@ -38,7 +64,7 @@ export enum GameParticipantStatus {
     READY = 'READY',
 }
 
-export enum GameAction {
+export enum GameActionType {
     CREATED = 'CREATED',
     READY = 'READY',
     STARTED = 'STARTED',
