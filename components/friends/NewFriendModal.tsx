@@ -3,11 +3,11 @@
 import ModalWrapper from '@/components/_common/ModalWrapper';
 import useFriendStore from '@/components/friends/store';
 import { ResponseWithStatusAndMessage } from '@/components/friends/types';
-import { siteConfig } from '@/_common/constants';
 import { DialogType } from '@/_common/types';
 import { Input } from '@nextui-org/input';
 import React from 'react';
 import { PiMagnifyingGlassDuotone } from 'react-icons/pi';
+import { USERNAME_WITH_DISCRIM_REGEX } from '@/_common/constants';
 
 const NewFriendModal = () => {
     const { sendFriendRequest, requesting } = useFriendStore();
@@ -19,7 +19,7 @@ const NewFriendModal = () => {
 
     const validationState = React.useMemo(() => {
         if (input === '') return undefined;
-        return siteConfig.regex.usernameWithDiscriminator.test(input) ? 'valid' : 'invalid';
+        return USERNAME_WITH_DISCRIM_REGEX.test(input) ? 'valid' : 'invalid';
     }, [input]);
 
     const afterClose = () => {

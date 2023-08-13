@@ -40,16 +40,6 @@ const getRules = (): FieldRules<AuthInput> => ({
             message: `${EMAIL_REGEX}`,
         },
     ],
-    username: [
-        {
-            rule: (v) => !!v,
-            message: 'Required',
-        },
-        {
-            rule: (v) => USERNAME_REGEX.test(v),
-            message: `${USERNAME_REGEX}`,
-        },
-    ],
     password: [
         {
             rule: (v) => !!v,
@@ -60,13 +50,31 @@ const getRules = (): FieldRules<AuthInput> => ({
             message: `Must be ${MIN_PASSWORD_LENGTH} characters for longer`,
         },
     ],
+    username: [],
     passwordConfirmation: [],
 });
 
-const passwordConfirmationRule = (isLogin: boolean, password: string) => ({
-    rule: (v: string) => isLogin || password === v,
-    message: 'Passwords do not match',
-});
+const usernameRule = (isLogin: boolean) => [
+    {
+        rule: (v?: string) => isLogin || !!v,
+        message: 'Required',
+    },
+    {
+        rule: (v?: string) => isLogin || USERNAME_REGEX.test(v || ''),
+        message: `${USERNAME_REGEX}`,
+    },
+];
+
+const passwordConfirmationRule = (isLogin: boolean, password: string) => [
+    {
+        rule: (v?: string) => isLogin || !!v,
+        message: 'Required',
+    },
+    {
+        rule: (v?: string) => isLogin || password === v,
+        message: 'Passwords do not match',
+    },
+];
 
 const AuthModal = () => {
     const router = useRouter();
@@ -134,7 +142,8 @@ const AuthModal = () => {
         console.log(`onSubmit, fields=${JSON.stringify(fieldValues)}`);
 
         const isValid = validate({
-            passwordConfirmation: [passwordConfirmationRule(isLogin, fieldValues.password)],
+            username: usernameRule(isLogin),
+            passwordConfirmation: passwordConfirmationRule(isLogin, fieldValues.password),
         });
 
         if (!isValid) {
@@ -272,11 +281,11 @@ const AuthModal = () => {
                 selectedKey={selected}
                 onSelectionChange={switchTab}
             >
-                <Tab key="login" title="Login" className="gap-4">
+                <Tab key="login" title="Login" className="flex flex-col gap-4">
                     {emailInput}
                     {passwordInput}
                 </Tab>
-                <Tab key="signup" title="Sign Up" className="gap-4">
+                <Tab key="signup" title="Sign Up" className="flex flex-col gap-4">
                     {emailInput}
                     {usernameInput}
                     {passwordInput}

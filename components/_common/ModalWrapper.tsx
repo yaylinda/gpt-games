@@ -62,16 +62,14 @@ const ModalWrapper = ({
             <ModalContent>
                 {(onClose) => (
                     <>
-                        {headerText && (
-                            <ModalHeader
-                                className={title({
-                                    color,
-                                    size: 'xs',
-                                })}
-                            >
-                                {headerText}
-                            </ModalHeader>
-                        )}
+                        <ModalHeader
+                            className={title({
+                                color,
+                                size: 'xs',
+                            })}
+                        >
+                            {headerText || ' '}
+                        </ModalHeader>
 
                         <ModalBody>
                             {children}

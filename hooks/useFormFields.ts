@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
+import { all } from 'deepmerge';
 
 export type Fields<T> = {
     [K in keyof T]: T[K];
@@ -38,20 +39,25 @@ const useFormFields = <T extends object>(initial: T, rules: FieldRules<T>) => {
 
     const getValues = (): T => fields;
 
-    const validate = <S>(extraRules?: FieldRules<S>): boolean => {
+    const validate = (extraRules?: FieldRules<Partial<T>>): boolean => {
         const errors: FieldErrors<T> = {} as FieldErrors<T>;
 
         for (const key of Object.keys(rules)) {
             const fieldKey: keyof T = key as keyof T;
             const fieldValue = fields[fieldKey];
 
-            // TODO - check if field has extra rule
-
-            if (!rules[fieldKey] || isEmpty(rules[fieldKey])) {
+            if (
+                (!rules[fieldKey] || isEmpty(rules[fieldKey])) &&
+                (!extraRules || isEmpty(extraRules[fieldKey]))
+            ) {
                 continue;
             }
 
-            const errorMessages = rules[fieldKey]
+            const allRules = [...rules[fieldKey], ...(extraRules?.[fieldKey] || [])];
+
+            console.log(`fieldKey=${key}, allRules=${JSON.stringify(allRules)}`);
+
+            const errorMessages = allRules
                 .filter(({ rule }) => !rule(fieldValue))
                 .map(({ message }) => message)
                 .join(', ');
