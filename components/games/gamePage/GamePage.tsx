@@ -1,5 +1,6 @@
 'use client';
 
+import GameContent from '@/components/games/gamePage/GameContent';
 import React from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/_common/db';
@@ -29,21 +30,21 @@ const GamePage = ({ userId, gameId }: GamePageProps) => {
     }, [fetchGame, gameId, init, supabase, userId]);
 
     if (loading || !isInit) {
-        return 'loading...';
+        return <p>loading...</p>;
     }
 
     if (!game || error) {
-        return 'ERROR';
+        return <p>ERROR</p>;
     }
 
     return (
-        <div>
+        <div className="w-full">
             <p>
                 {game.name} - {game.type}
             </p>
-            <div className="flex flex-grow">
+            <div className="w-full flex flex-row">
                 <GameActionsList />
-
+                <GameContent />
                 <GameParticipantsList />
             </div>
 

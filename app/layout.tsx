@@ -47,12 +47,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         defaultTheme: 'dark',
                     }}
                 >
-                    <div className="relative flex flex-col h-screen">
+                    <div className="relative flex flex-col h-screen max-w-2xl mx-auto">
                         {/* @ts-expect-error next version of TS will fix this */}
                         <NavbarWrapper />
-                        <main className="container mx-auto max-w-xl pt-16 px-6 flex-grow">
-                            {children}
-                        </main>
+                        <main className="container flex-grow px-6">{children}</main>
                         <footer className="w-full flex items-center justify-center py-3">
                             <p className="text-xs text-default-400">
                                 &copy; {moment().year()} YayLinda Inc.
