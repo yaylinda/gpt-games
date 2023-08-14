@@ -4,6 +4,7 @@ export const SITE_DESCRIPTION = 'Play games powered by GPT';
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const USERNAME_REGEX = /^[a-zA-Z0-9._-]{4,50}$/;
 export const USERNAME_WITH_DISCRIM_REGEX = /^[a-zA-Z0-9._-]{4,50}#\d{4}$/;
+export const GAME_NAME_REGEX = /^[ a-zA-Z0-9._-]{4,50}$/;
 export const MIN_PASSWORD_LENGTH = 4;
 export const DUPLICATE_EMAIL = 'User already registered';
 export const DUPLICATE_USERNAME =

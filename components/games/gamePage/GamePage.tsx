@@ -1,14 +1,13 @@
 'use client';
 
-import useGameStore from '@/components/games/store';
 import React from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/_common/db';
-import { Tables } from '@/_common/types';
 import useGamePageStore from '@/components/games/gamePage/store';
-import { Simulate } from 'react-dom/test-utils';
-import error = Simulate.error;
 import useClientStore from '@/components/client/store';
+import GameParticipantsList from '@/components/games/gamePage/GameParticipantsList';
+import GameActionsList from '@/components/games/gamePage/GameActionsList';
+import { Button } from '@nextui-org/react';
 
 interface GamePageProps {
     userId: string;
@@ -21,6 +20,8 @@ const GamePage = ({ userId, gameId }: GamePageProps) => {
     const { init, isInit } = useClientStore();
 
     const { loading, error, game, actions, participants, fetchGame } = useGamePageStore();
+
+    const isCreator = userId === game?.createdBy;
 
     React.useEffect(() => {
         init(userId, supabase);
@@ -40,11 +41,13 @@ const GamePage = ({ userId, gameId }: GamePageProps) => {
             <p>
                 {game.name} - {game.type}
             </p>
-            <div>
-                <p>Players:</p>
-                {game.participants.map()}
+            <div className="flex flex-grow">
+                <GameActionsList />
+
+                <GameParticipantsList />
             </div>
-            {}
+
+            {isCreator && <Button color="success">Start!</Button>}
         </div>
     );
 };

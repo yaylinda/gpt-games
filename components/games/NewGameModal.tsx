@@ -12,7 +12,7 @@ import { Radio, RadioGroup } from '@nextui-org/radio';
 import { Switch } from '@nextui-org/switch';
 import React from 'react';
 import { PiTextAaDuotone, PiUserFill, PiUsersFill } from 'react-icons/pi';
-import { USERNAME_REGEX } from '@/_common/constants';
+import { GAME_NAME_REGEX, USERNAME_REGEX } from '@/_common/constants';
 
 const getInitialInput = (): CreateGameInput => ({
     name: '',
@@ -28,8 +28,8 @@ const getRules = (): FieldRules<CreateGameInput> => ({
             message: 'Required',
         },
         {
-            rule: (v) => USERNAME_REGEX.test(v),
-            message: `${USERNAME_REGEX}`,
+            rule: (v) => GAME_NAME_REGEX.test(v),
+            message: `${GAME_NAME_REGEX}`,
         },
     ],
     type: [
