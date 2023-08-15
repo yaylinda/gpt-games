@@ -3,14 +3,12 @@ import { Divider } from '@nextui-org/divider';
 
 const GameContent = () => {
     return (
-        <Card className="flex-grow" isHoverable>
-            <CardHeader>
-                <p>GameContent</p>
-            </CardHeader>
+        <Card className="flex-grow">
+            <CardHeader />
             <Divider />
-            <CardBody />
+            <CardBody></CardBody>
             <Divider />
-            <CardFooter></CardFooter>
+            <CardFooter />
         </Card>
     );
 };
