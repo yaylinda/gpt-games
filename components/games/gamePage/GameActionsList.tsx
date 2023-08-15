@@ -7,12 +7,12 @@ const GameActionsList = () => {
     const { actions } = useGamePageStore();
 
     return (
-        <Card>
+        <Card className="flex flex-grow">
             <CardHeader>
                 <p>Game Actions</p>
             </CardHeader>
             <Divider />
-            <CardBody>
+            <CardBody className="p-2 gap-2">
                 {actions.map((a) => (
                     <GameActionItem key={a.id} action={a} />
                 ))}

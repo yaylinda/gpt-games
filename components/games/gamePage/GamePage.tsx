@@ -1,6 +1,7 @@
 'use client';
 
 import GameContent from '@/components/games/gamePage/GameContent';
+import { subtitle, title } from '@/components/primitives';
 import React from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/_common/db';
@@ -36,14 +37,32 @@ const GamePage = ({ userId, gameId }: GamePageProps) => {
     }
 
     return (
-        <div className="w-full">
-            <p>
-                {game.name} - {game.type}
-            </p>
-            <div className="w-full flex flex-row justify-between gap-4">
-                <GameActionsList />
+        <div className="flex flex-col w-full gap-4">
+            <div className="flex flex-row items-center gap-2">
+                <p
+                    className={title({
+                        color: 'success',
+                        size: 'md',
+                    })}
+                >
+                    {game.name}
+                </p>
+                <p
+                    className={title({
+                        color: 'default',
+                        size: 'xs',
+                    })}
+                >
+                    ({game.type})
+                </p>
+            </div>
+
+            <div className="w-full flex flex-col justify-between gap-4">
                 <GameContent />
-                <GameParticipantsList />
+                <div className="w-full flex flex-row justify-between gap-4">
+                    <GameActionsList />
+                    <GameParticipantsList />
+                </div>
             </div>
         </div>
     );

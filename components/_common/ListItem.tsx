@@ -21,7 +21,7 @@ const ListItem = ({ icon, iconColor, title, subtitle, actions, onClick }: ListIt
             shadow="none"
             className="w-full"
         >
-            <CardBody className="flex flex-row items-center justify-between">
+            <CardBody className="flex flex-row items-center justify-between p-2">
                 <div className="flex flex-row items-center gap-4">
                     <Avatar
                         className="bg-white border-white"
