@@ -3,7 +3,7 @@ import { Card, CardBody } from '@nextui-org/card';
 import React from 'react';
 import { IconBaseProps } from 'react-icons';
 
-interface RowProps {
+export interface ListItemProps {
     icon: (props: IconBaseProps) => React.JSX.Element;
     iconColor: string;
     title: React.ReactNode;
@@ -12,7 +12,7 @@ interface RowProps {
     onClick?: () => void;
 }
 
-const ListItem = ({ icon, iconColor, title, subtitle, actions, onClick }: RowProps) => {
+const ListItem = ({ icon, iconColor, title, subtitle, actions, onClick }: ListItemProps) => {
     return (
         <Card
             isHoverable

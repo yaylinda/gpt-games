@@ -20,9 +20,7 @@ const GamePage = ({ userId, gameId }: GamePageProps) => {
 
     const { init, isInit } = useClientStore();
 
-    const { loading, error, game, actions, participants, fetchGame } = useGamePageStore();
-
-    const isCreator = userId === game?.createdBy;
+    const { loading, error, game, fetchGame } = useGamePageStore();
 
     React.useEffect(() => {
         init(userId, supabase);
@@ -42,13 +40,11 @@ const GamePage = ({ userId, gameId }: GamePageProps) => {
             <p>
                 {game.name} - {game.type}
             </p>
-            <div className="w-full flex flex-row">
+            <div className="w-full flex flex-row justify-between gap-4">
                 <GameActionsList />
                 <GameContent />
                 <GameParticipantsList />
             </div>
-
-            {isCreator && <Button color="success">Start!</Button>}
         </div>
     );
 };
