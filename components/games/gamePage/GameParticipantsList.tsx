@@ -1,6 +1,7 @@
 import useGamePageStore from '@/components/games/gamePage/store';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
 import { Divider } from '@nextui-org/divider';
+import GameParticipantItem from '@/components/games/gamePage/GameParticipantItem';
 
 const GameParticipantsList = () => {
     const { participants } = useGamePageStore();
@@ -11,9 +12,9 @@ const GameParticipantsList = () => {
                 <p>Game Participants</p>
             </CardHeader>
             <Divider />
-            <CardBody>
+            <CardBody className="p-2 gap-2">
                 {participants.map((p) => (
-                    <GameParticipantItem />
+                    <GameParticipantItem key={p.userId} participant={p} />
                 ))}
             </CardBody>
             <Divider />
